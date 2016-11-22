@@ -3,9 +3,11 @@ import numpy as np
 from math import factorial
 import matplotlib.pyplot as plt
 
+
 # k-th derivative of x^n
-def der(x,n,k):
-    if(k > n): return 0
+def der(x, n, k):
+    if k > n:
+        return 0
     return factorial(n)/factorial(n-k)*x**(n-k)
 
 parser = argparse.ArgumentParser(description='camdesign')
@@ -22,7 +24,7 @@ a = len(positions) + 1
 d = a + args.o
 
 # Vandermonde matrix
-A = np.zeros((d,d))
+A = np.zeros((d, d))
 
 B = np.zeros(d)
 
@@ -37,19 +39,19 @@ for col in range(0, d):
     A[a-1, col] = 1
 
 # Match derivatives
-for row in range(a,d):
+for row in range(a, d):
     B[row] = 0
     for col in range(0, d):
-        A[row, col] = der(1,col,row-a+1) - der(0,col,row-a+1)
+        A[row, col] = der(1, col, row-a+1) - der(0, col, row-a+1)
 
-c = np.linalg.solve(A,B)
+c = np.linalg.solve(A, B)
 
-print(A,'\n\n', B,'\n\n',c)
+print(A, '\n\n', B, '\n\n', c)
 
-x = np.linspace(0,1,num=200)
-y = np.polyval(c[::-1],x)
+x = np.linspace(0, 1, num=200)
+y = np.polyval(c[::-1], x)
 
-print(x,y)
-plt.plot(x,y)
-plt.plot(np.linspace(0,1*len(positions)/(len(positions)+1),num=len(positions)),positions)
+print(x, y)
+plt.plot(x, y)
+plt.plot(np.linspace(0, 1*len(positions)/(len(positions)+1), num=len(positions)), positions)
 plt.show()
