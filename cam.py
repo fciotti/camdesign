@@ -1,5 +1,6 @@
 import numpy as np
 import fileio
+import envelope
 
 
 class Cam:
@@ -18,26 +19,23 @@ class Cam:
         if ccw is not None:
             self.ccw = ccw
         self.loaded = False
-        self.theta = np.linspace(0, 2 * np.pi, len(self.travel.y))
+        self.theta = np.multiply(self.travel.x, 2 * np.pi)
         if self.ccw:
             self.theta = self.theta[::-1]
         if self.follower.kind == 'knife':
             if self.follower.offset == 0:
                 self.rho = self.travel.y + self.radius
             else:
-                if self.follower.offset > self.radius:
-                    print('Offset must be smaller than radius')
-                    return
-                h0 = np.math.sqrt(self.radius**2-self.follower.offset**2)
-                self.rho = np.sqrt((self.travel.y+h0)**2+self.follower.offset**2)
-                # self.rho = self.radius / (1 - self.travel.y / self.follower.offset) wrong
-        elif self.follower == 'roller':
+                self.rho = np.sqrt(self.follower.offset**2+(self.radius+self.travel.y)**2)
+        elif self.follower.kind == 'roller':
             if self.follower.offset == 0:
-                self.rho = self.travel.y + self.radius
+                self.rho = self.travel.y + self.radius - self.follower.radius
             else:
-                return
-        elif self.follower == 'flat':
-            return
+                rho_center = np.sqrt(self.follower.offset ** 2 + (self.radius + self.travel.y) ** 2)
+                self.theta, self.rho = envelope.circles(self.theta, rho_center, self.follower.radius, self.ccw)
+        elif self.follower.kind == 'flat':
+            self.theta, self.rho = envelope.lines(self.theta, self.travel.y + self.radius, self.theta+np.pi/2)
+            None
 
     def load(self, filename):
         try:

@@ -2,6 +2,8 @@ import argparse
 from travel import Travel
 from cam import Cam
 from follower import Follower
+import matplotlib
+matplotlib.use('Qt5Agg', force=True)
 import matplotlib.pyplot as plt
 import fileio
 
@@ -117,7 +119,7 @@ while True:
             if not travel():
                 print('Travel undefined')
                 continue
-            follower.update(args.follower, args.offset, args.radius)
+            follower.update(args.follower, args.offset, args.fradius)
             cam.gen(args.radius, args.ccw)
 
     # LOAD

@@ -24,13 +24,14 @@ class Travel:
             self.xpoints, self.ypoints, self.levels = fileio.read(filename)
         except FileNotFoundError:
             print('File not found')
+            return
         except ValueError:
             print('Malformed input file')
+            return
 
         self.l = not not self.levels  # True if levels are used
 
         self.update(interp, order, steps, n)
-
 
     def update(self, interp=None, order=None, steps=None, n=None):
         if interp is not None:
@@ -66,10 +67,10 @@ class Travel:
 
         # Fixing x to [0;1]
         pts = [i for i, p in enumerate(x) if p >= 1]
-        if len(pts):
-            first = pts[0]  # find index of first point with x >= 1
-            x = [p-1 for p in x[first:]] + x[:first-1]
-            y = y[first:] + y[:first-1]
+        if len(pts) and self.interp not in ['linear', 'spline']:
+            first = pts[0]  # find index of first point with x > 1
+            x = [p-1 for p in x[first:]] + x[:first+1]
+            y = y[first:] + y[:first+1]
 
         # Tile the profile
         self.x = []

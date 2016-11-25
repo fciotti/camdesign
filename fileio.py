@@ -40,14 +40,8 @@ def read(filename):
     elif cc == 3:
         levels.append(levels[0][:])
         levels[-1][0] += 1
-        if levels[-1][1] == 0:
-            x.append(levels[-1][0])
-            y.append(levels[-1][2])
-        else:
-            x.append(levels[-1][0])
-            y.append(levels[-1][2])
-            x.append(levels[-1][0] + levels[-1][1])  # should be removed?
-            y.append(levels[-1][2])
+        x.append(levels[-1][0])
+        y.append(levels[-1][2])
     return x, y, levels
 
 

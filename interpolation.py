@@ -11,8 +11,8 @@ def spline(xpoints, ypoints, order, steps):
 
 
 def linear(xpoints, ypoints, steps):
-    f = interpolate.interp1d(xpoints, ypoints)
-    x = np.linspace(f.x[0], f.x[-1], steps)
+    f = interpolate.interp1d([xpoints[-2]-1, xpoints[-1]-1] + xpoints, [ypoints[-2], ypoints[-1]] + ypoints)
+    x = np.linspace(0, 1, steps, endpoint=True)  # f.x[0], f.x[-1]
     y = f(x)
     return x, y
 
