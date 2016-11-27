@@ -1,4 +1,5 @@
 import csv
+from utils import HandledValueError
 
 
 def read(filename):
@@ -12,12 +13,12 @@ def read(filename):
         # Checking input file format
         cc = len(next(lines))
         if cc not in [2, 3]:
-            raise ValueError
+            raise HandledValueError('Malformed input file')
         file.seek(0)
 
         for line in lines:
             if len(line) != cc:
-                raise ValueError
+                raise HandledValueError('Malformed input file')
             pos = list(map(float, line))
             if cc == 2:
                 x.append(pos[0])
@@ -33,7 +34,7 @@ def read(filename):
                     x.append(pos[0] + pos[1])
                     y.append(pos[2])
 
-    # Matching last and first element
+    # Matching last and first element TODO don't do if already matched
     if cc == 2:
         x.append(x[0] + 1)
         y.append(y[0])

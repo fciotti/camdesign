@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import interpolate
+from utils import HandledValueError
 
 
 def spline(xpoints, ypoints, order, steps):
@@ -57,7 +58,7 @@ def func(kind):
     elif kind == 'polynomial':
         return polynomial
     else:
-        raise ValueError
+        raise HandledValueError
 
 
 def harmonic(x0, x1, y0, y1, steps):

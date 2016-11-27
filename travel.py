@@ -11,24 +11,11 @@ class Travel:
         return self.x is not None
 
     def load(self, filename):
-        try:
-            self.x, self.y = fileio.read(filename)
-            self.xpoints, self.ypoints, self.levels, self.l = None, None, None, None
-        except FileNotFoundError:
-            print('File not found')
-        except ValueError:
-            print('Malformed input file')
+        self.x, self.y = fileio.read(filename)
+        self.xpoints, self.ypoints, self.levels, self.l = None, None, None, None
 
     def gen(self, filename, interp, order, steps, n):
-        try:
-            self.xpoints, self.ypoints, self.levels = fileio.read(filename)
-        except FileNotFoundError:
-            print('File not found')
-            return
-        except ValueError:
-            print('Malformed input file')
-            return
-
+        self.xpoints, self.ypoints, self.levels = fileio.read(filename)
         self.l = not not self.levels  # True if levels are used
 
         self.update(interp, order, steps, n)
@@ -75,5 +62,5 @@ class Travel:
         # Tile the profile
         self.x = []
         for i in range(0, self.n):
-            self.x.extend([p+i for p in x])  # increment x elements by i, performance is critic
+            self.x.extend([(p+i)/self.n for p in x])  # increment x elements by i, performance is critic
         self.y = np.tile(y, self.n)

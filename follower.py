@@ -1,5 +1,5 @@
 class Follower:
-    def __init__(self, kind='knife', offset=0, radius=0):
+    def __init__(self, kind='roller', offset=0, radius=0):
         self.kind = kind
         self.offset = offset
         self.radius = radius
