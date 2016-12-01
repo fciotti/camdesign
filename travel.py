@@ -40,7 +40,7 @@ class Travel:
             x, y = interpolation.spline(self.xpoints, self.ypoints, self.order, self.steps)
         elif self.interp == 'linear':
             x, y = interpolation.linear(self.xpoints, self.ypoints, self.steps)
-            # x, y = self.xpoints, self.ypoints  # more sense
+            # x, y = self.xpoints, self.ypoints  # more sense, some problems with cam
         elif self.interp in ['harmonic', 'cycloidal', 'parabolic']:
             if self.l:
                 x, y = interpolation.lev(self.interp, self.levels, self.steps)
@@ -60,7 +60,7 @@ class Travel:
             y = y[first:] + y[:first+1]
 
         # Tile the profile
-        self.x = []
+        self.x = np.empty([len(x)*self.n])
         for i in range(0, self.n):
-            self.x.extend([(p+i)/self.n for p in x])  # increment x elements by i, performance is critic
+            self.x.put(np.arange(i*len(x), (i+1)*len(x)), [(p+i)/self.n for p in x])  # increment x elements by i
         self.y = np.tile(y, self.n)

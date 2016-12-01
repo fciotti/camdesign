@@ -1,12 +1,50 @@
 import numpy as np
 import fileio
 import envelope
-from utils import *
-from time import time
+from utils import cartesian, HandledValueError, Progress
+from scipy.interpolate import interp1d
 
 
 class Cam:
-    pcoords, loaded, radius, ccw, conj_pcoords, breadth = None, None, None, None, None, None
+    pcoords, _points, f, rho_trace, spline, loaded, radius, ccw, conj_pcoords, breadth, width =\
+        None, None, None, None, None, None, None, None, None, None, None
+
+    def __getattr__(self, name):
+        if name == 'theta':
+            return self.pcoords[0]
+        elif name == 'rho':
+            return self.pcoords[1]
+        elif name == 'ppoints':
+            return self.pcoords.T
+        elif name == 'points':
+            if self._points is None:
+                self._points = cartesian(*self.pcoords)
+            return self._points
+        elif name == 'coords':
+            return self.points.T
+        return None
+
+    # Return cartesian coords after a theta0 counterclockwise rotation
+    def rot_coords(self, theta0):
+        return cartesian(self.theta + theta0, self.rho).T
+
+    # Search nearest theta and return its rho
+    # def near_rho(self, theta):
+    #     theta %= 2*np.pi
+    #     diff = np.array([2*np.pi-p if p > np.pi else p for p in ((self.pcoords[0] - theta) % 2*np.pi)])
+    #     # print(diff)
+    #     # np.unwrap doesn't work, who knows why
+    #     # print(np.unwrap(self.pcoords[0]-theta))
+    #     # np.absolute(np.unwrap(self.pcoords[0]-theta))
+    #     return self.pcoords[1, diff.argmin()]
+
+    def interp(self, theta):
+        return self.f(theta % 2*np.pi)
+        # return splev(theta % 2 * np.pi, self.spline)
+
+    # def interp_der(self, theta):
+    #     # return self.f(theta % 2*np.pi)
+    #     return splev(theta % 2 * np.pi, self.spline, der=1)
 
     def __call__(self):
         return self.pcoords is not None
@@ -24,11 +62,11 @@ class Cam:
         if ccw is not None:
             self.ccw = ccw
         self.loaded = False
+        self._points = None
         self.conj_pcoords = None
         self.pcoords = np.empty([2, len(self.travel.x)])
         self.pcoords[0] = np.multiply(self.travel.x, 2 * np.pi)
-        if self.ccw:
-            self.pcoords[0] = self.pcoords[0][::-1]
+
         if self.follower.kind == 'knife':
             if self.follower.offset == 0:
                 self.pcoords[1] = self.travel.y + self.radius
@@ -38,13 +76,32 @@ class Cam:
             if self.follower.offset == 0:
                 self.pcoords[1] = self.travel.y + self.radius - self.follower.radius
             else:
-                rho_trace = np.sqrt(self.follower.offset ** 2 + (self.radius + self.travel.y) ** 2)
-                self.pcoords = envelope.circles(self.pcoords[0], rho_trace, self.follower.radius, self.ccw)
+                self.rho_trace = np.sqrt(self.follower.offset ** 2 + (self.radius + self.travel.y) ** 2)
+                self.pcoords = envelope.roller(self.pcoords[0], self.rho_trace, self.follower.radius)
         elif self.follower.kind == 'flat':
-            self.pcoords = envelope.lines(self.pcoords[0], self.travel.y + self.radius, self.pcoords[0]+np.pi/2)
+            self.pcoords = envelope.flat(np.array([self.pcoords[0], self.travel.y + self.radius]))
+            # self.pcoords = envelope.flat2(self.pcoords[0], self.travel.y + self.radius, self.pcoords[0]+np.pi/2)
+        if self.ccw:
+            self.pcoords[1] = self.pcoords[1][::-1]
+
+        # Fixing x to [0;2pi], needed only for a few things
+        self.pcoords[0] %= 2*np.pi
+        if self.pcoords[0][-1] == 0:
+            self.pcoords[0][-1] = 2*np.pi
+        self.pcoords = self.pcoords[:, self.pcoords[0].argsort()]
+
+        # pts = [i for i, p in enumerate(self.pcoords[0]) if p >= 0]
+        # if len(pts):
+        #     first = pts[0]  # find index of first point with theta >= 0
+        #     self.pcoords[0] = self.pcoords[0][first:] + self.pcoords[0][:first + 1]
+        #     self.pcoords[1] = self.pcoords[1][first:] + self.pcoords[1][:first + 1]
+
+        self.f = interp1d(*self.pcoords)
+        # self.spline = splrep(*self.pcoords, per=True)
 
     def load(self, filename):
         self.pcoords = fileio.read(filename)
+        self._points = None
         self.loaded = True
         self.conj_pcoords = None
 
@@ -57,7 +114,7 @@ class Cam:
             print('Searching optimal breadth')
             progress = Progress()
             for i, p in enumerate(self.pcoords.T):
-                b = p[1] + self.pcoords[1][np.absolute(np.unwrap(self.pcoords[0]-p[0]-np.pi)).argmin()]
+                b = p[1] + self.interp(p[0]+np.pi)  # self.near_rho(p[0]+np.pi)
                 if b > breadth:
                     breadth = b
                 progress(i/len(self.pcoords.T))

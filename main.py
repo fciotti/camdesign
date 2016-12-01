@@ -7,6 +7,7 @@ import fileio
 import simulation
 import numpy as np
 from utils import HandledValueError, plot_polar
+import export
 
 
 class ArgumentError(Exception):
@@ -43,10 +44,10 @@ parent_travel.add_argument('--steps', '-s', type=int, help='interpolation steps'
 parent_cam = ArgumentParser(add_help=False)
 parent_cam.add_argument('--radius', '-r', type=float, help='base radius')
 parent_cam.add_argument('--ccw', action='store_const', const=True, help='counterclockwise')
-parent_cam.add_argument('--cw', dest='ccw', action='store_const', const=False, help='clockwise')
-parent_cam.add_argument('--follower', '-f', choices=['knife', 'roller', 'flat'], help='follower type')
+# parent_cam.add_argument('--follower', '-f', choices=['knife', 'roller', 'flat'], help='follower type')
+parent_cam.add_argument('--flat', '-f', action='store_const', const=True, help='flat follower')
 parent_cam.add_argument('--offset', '-d', type=float, help='follower offset')
-parent_cam.add_argument('--fradius', '-q', type=float, help='follower radius')
+parent_cam.add_argument('--fradius', '-q', type=float, help='follower radius (set 0 for knife edge)')
 
 parent_conj = ArgumentParser(add_help=False)
 parent_conj.add_argument('--breadth', '-b', type=float, help='breadth, if 0 calculate optimal (default)')
@@ -62,7 +63,7 @@ parser_gen_travel.set_defaults(kind='linear', order=3, n=1, steps=10000)
 
 parser_gen_cam = subparsers_gen.add_parser('cam', parents=[parent_cam],
                                            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser_gen_cam.set_defaults(radius=0, ccw=False, follower='roller', offset=0, fradius=0)
+parser_gen_cam.set_defaults(radius=0, ccw=False, flat=False, offset=0, fradius=0)
 
 parser_gen_conj = subparsers_gen.add_parser('conj', parents=[parent_conj])
 parser_gen_conj.set_defaults(breadth=0)
@@ -73,6 +74,8 @@ subparsers_update = parser_update.add_subparsers(dest='target')
 subparsers_update.required = True
 parser_update_travel = subparsers_update.add_parser('travel', parents=[parent_travel])
 parser_update_cam = subparsers_update.add_parser('cam', parents=[parent_cam])
+parser_update_cam.add_argument('--cw', dest='ccw', action='store_const', const=False, help='clockwise')
+parser_update_cam.add_argument('--nonflat', dest='flat', action='store_const', const=False, help='non flat follower')
 parser_update_conj = subparsers_update.add_parser('conj', parents=[parent_conj])
 
 parser_load = subparsers.add_parser('load', help='load from file')
@@ -91,11 +94,15 @@ parser_draw.add_argument('--cartesian', '-c', action='store_true')
 parser_print = subparsers.add_parser('print', help='show current variables')
 
 parser_export = subparsers.add_parser('export', help='export')
+parser_export.add_argument('file', help='output stl file')
 
-parser_sim = subparsers.add_parser('sim', help='dynamic simulation')
+parser_sim = subparsers.add_parser('sim', help='dynamic simulation',
+                                   formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser_sim_velocity = parser_sim.add_mutually_exclusive_group(required=False)
 parser_sim_velocity.add_argument('--omega', '-w', type=float, default=1, help='angular velocity')
 parser_sim_velocity.add_argument('--rpm', '-r', type=float, help='revolutions per minute')
+parser_sim.add_argument('--steps', '-s', type=int, default=500, help='steps')
+parser_sim.add_argument('--precision', '-p', type=float, default=0.001, help='precision')
 parser_sim.add_argument('--gravity', '-g', type=float, default=9.8, help='gravitational acceleration')
 # TODO Simulation with conj, not simple
 
@@ -127,7 +134,7 @@ while True:
                 if not travel():
                     print('Travel undefined')
                     continue
-                follower.update(args.follower, args.offset, args.fradius)
+                follower.update(args.flat, args.offset, args.fradius)
                 cam.gen(args.radius, args.ccw)
             elif args.target == 'conj':
                 if not cam():
@@ -190,12 +197,6 @@ while True:
                         ax.margins(0.1)
                         ax.plot(*plot_polar(*plotted))
                     else:
-                        # Not working well
-                        # plotted[0] += np.pi/2*(1-np.sign(plotted[1]))
-                        # plotted[1] = np.absolute(plotted[1])
-                        # if len(plotted) > 2:
-                        #     plotted[2] += np.pi/2*(1-np.sign(plotted[3]))
-                        #     plotted[3] = np.absolute(plotted[3])
                         ax = plt.subplot(111, polar=True)
                         ax.set_theta_zero_location('N')
                         ax.plot(*plotted)
@@ -223,7 +224,7 @@ while True:
                 elif cam.loaded:
                     print('Loaded cam, unable to update')
                     continue
-                follower.update(args.follower, args.offset, args.fradius)
+                follower.update(args.flat, args.offset, args.fradius)
                 cam.gen(args.radius, args.ccw)
             elif args.target == 'conj':
                 if not cam.conj():
@@ -232,7 +233,15 @@ while True:
                 cam.gen_conjugated(args.breadth)
         # SIMULATION
         elif args.command == 'sim':
-            simulation.draw(cam, follower, args.omega if args.rpm is None else args.rpm*2*np.pi)
+            if not cam():
+                print('Cam not defined')
+                continue
+            if args.rpm is not None:
+                args.omega = args.rpm/60*2*np.pi
+            simulation.draw(cam, follower, args.omega, args.steps, args.precision)
+        # EXPORT
+        elif args.command == 'export':
+            export.stl(cam, args.file)
     except (ArgumentError, argparse.ArgumentError, argparse.ArgumentTypeError) as ex:
         if isinstance(ex.args[0], ArgumentParser):
             ex.args[0].print_usage()
