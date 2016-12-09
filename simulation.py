@@ -5,7 +5,6 @@ import numpy as np
 from shapely.geometry import LinearRing, LineString
 # from shapely.affinity import translate
 import matplotlib.animation as animation
-from time import time
 
 
 def update(n, cam_plot, foll_plot, cam_coords, foll_heights, kind, steps, frames):

@@ -4,7 +4,8 @@ from utils import HandledValueError
 
 
 def spline(xpoints, ypoints, order, steps):
-    # TODO check if order > len(xpoints)
+    if order > 5 or order >= len(xpoints):
+        raise HandledValueError('Spline order must be smaller than number of points')
     tck = interpolate.splrep(xpoints, ypoints, k=order, per=True)
     x = np.linspace(0, 1, steps)
     y = interpolate.splev(x, tck)

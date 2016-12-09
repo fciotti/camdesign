@@ -40,11 +40,12 @@ parent_travel.add_argument('--kind', '-k', choices=interp, help='kind of interpo
 parent_travel.add_argument('--order', '-o', type=int, help='spline/polynomial order')
 parent_travel.add_argument('-n', type=int, help='repetitions per cycle')
 parent_travel.add_argument('--steps', '-s', type=int, help='interpolation steps')
+parent_travel.add_argument('--x0', '-a', type=float, help='lower bound of function evaluation')
+parent_travel.add_argument('--x1', '-b', type=float, help='upper bound of function evaluation')
 
 parent_cam = ArgumentParser(add_help=False)
 parent_cam.add_argument('--radius', '-r', type=float, help='base radius')
 parent_cam.add_argument('--ccw', action='store_const', const=True, help='counterclockwise')
-# parent_cam.add_argument('--follower', '-f', choices=['knife', 'roller', 'flat'], help='follower type')
 parent_cam.add_argument('--flat', '-f', action='store_const', const=True, help='flat follower')
 parent_cam.add_argument('--offset', '-d', type=float, help='follower offset')
 parent_cam.add_argument('--fradius', '-q', type=float, help='follower radius (set 0 for knife edge)')
@@ -56,10 +57,13 @@ parser_gen = subparsers.add_parser('gen', help='generate, unspecified variables 
 subparsers_gen = parser_gen.add_subparsers(dest='target')
 subparsers_gen.required = True
 
+parent_gen_travel_defaults = ArgumentParser(add_help=False)
 parser_gen_travel = subparsers_gen.add_parser('travel', parents=[parent_travel],
                                               formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser_gen_travel.add_argument('--input', '-i', help='input file', required=True)
-parser_gen_travel.set_defaults(kind='linear', order=3, n=1, steps=10000)
+parser_gen_travel_source = parser_gen_travel.add_mutually_exclusive_group(required=True)
+parser_gen_travel_source.add_argument('--input', '-i', help='input file')
+parser_gen_travel_source.add_argument('--function', '-f', help='function of x')
+parser_gen_travel.set_defaults(kind='linear', order=3, n=1, steps=10000, x0=0, x1=1)
 
 parser_gen_cam = subparsers_gen.add_parser('cam', parents=[parent_cam],
                                            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -91,10 +95,11 @@ parser_draw.add_argument('targets', nargs='+', choices=targets)
 parser_draw.add_argument('--unroll', '-u', action='store_true')
 parser_draw.add_argument('--cartesian', '-c', action='store_true')
 
-parser_print = subparsers.add_parser('print', help='show current variables')
+# parser_print = subparsers.add_parser('print', help='show current variables')
 
-parser_export = subparsers.add_parser('export', help='export')
+parser_export = subparsers.add_parser('export', help='export stl model')
 parser_export.add_argument('file', help='output stl file')
+parser_export.add_argument('width', help='cam width')
 
 parser_sim = subparsers.add_parser('sim', help='dynamic simulation',
                                    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -112,8 +117,20 @@ cam = Cam(travel, follower)
 
 while True:
     try:
-        command = input('camdesign: ')
-        args = parser.parse_args(command.split())
+        command = input('camdesign: ').split()
+        if command[0] == 'update':
+            # defaults = parser._defaults
+            # parser._defaults = {}
+            parser_gen_travel.set_defaults(kind=None, order=None, n=None, steps=None, x0=None, x1=None)
+            parser_gen_cam.set_defaults(radius=None, ccw=None, flat=None, offset=None, fradius=None)
+            parser_gen_conj.set_defaults(breadth=None)
+            args = parser.parse_args(command)
+            parser_gen_travel.set_defaults(kind='linear', order=3, n=1, steps=10000, x0=0, x1=1)
+            parser_gen_cam.set_defaults(radius=0, ccw=False, flat=False, offset=0, fradius=0)
+            parser_gen_conj.set_defaults(breadth=0)
+            # parser._defaults = defaults
+        else:
+            args = parser.parse_args(command)
 
         # HELP
         if args.command == 'help':
@@ -126,7 +143,7 @@ while True:
         # GEN
         elif args.command == 'gen':
             if args.target == 'travel':
-                travel.gen(args.input, args.kind, args.order, args.steps, args.n)
+                travel.gen(args.input, args.function, args.x0, args.x1, args.kind, args.order, args.steps, args.n)
                 if cam() and not cam.loaded:
                     print('Updating cam')
                     cam.gen()
@@ -211,7 +228,7 @@ while True:
                     print('Loaded cam, unable to update')
                     continue
                 print('Updating travel')
-                travel.update(args.kind, args.order, args.steps, args.n)
+                travel.update(args.x0, args.x1, args.kind, args.order, args.steps, args.n)
 
                 # If cam is generated (not loaded) repeat interpolation
                 if cam() and not cam.loaded:
@@ -241,7 +258,7 @@ while True:
             simulation.draw(cam, follower, args.omega, args.steps, args.precision)
         # EXPORT
         elif args.command == 'export':
-            export.stl(cam, args.file)
+            export.stl(cam, args.file, args.width)
     except (ArgumentError, argparse.ArgumentError, argparse.ArgumentTypeError) as ex:
         if isinstance(ex.args[0], ArgumentParser):
             ex.args[0].print_usage()

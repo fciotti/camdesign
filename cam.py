@@ -28,23 +28,9 @@ class Cam:
     def rot_coords(self, theta0):
         return cartesian(self.theta + theta0, self.rho).T
 
-    # Search nearest theta and return its rho
-    # def near_rho(self, theta):
-    #     theta %= 2*np.pi
-    #     diff = np.array([2*np.pi-p if p > np.pi else p for p in ((self.pcoords[0] - theta) % 2*np.pi)])
-    #     # print(diff)
-    #     # np.unwrap doesn't work, who knows why
-    #     # print(np.unwrap(self.pcoords[0]-theta))
-    #     # np.absolute(np.unwrap(self.pcoords[0]-theta))
-    #     return self.pcoords[1, diff.argmin()]
-
+    # Return rho at given theta
     def interp(self, theta):
         return self.f(theta % 2*np.pi)
-        # return splev(theta % 2 * np.pi, self.spline)
-
-    # def interp_der(self, theta):
-    #     # return self.f(theta % 2*np.pi)
-    #     return splev(theta % 2 * np.pi, self.spline, der=1)
 
     def __call__(self):
         return self.pcoords is not None

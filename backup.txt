@@ -177,3 +177,19 @@ def draw_bad(cam, follower, omega, steps):
     anim = animation.FuncAnimation(fig, update, 120, fargs=(cam_plot, foll_plot, cam_coords, height, steps),
                                    interval=2*np.pi/omega, repeat=True)
     plt.show()
+
+cam.py
+
+    # Search nearest theta and return its rho
+    # def near_rho(self, theta):
+    #     theta %= 2*np.pi
+    #     diff = np.array([2*np.pi-p if p > np.pi else p for p in ((self.pcoords[0] - theta) % 2*np.pi)])
+    #     # print(diff)
+    #     # np.unwrap doesn't work, who knows why
+    #     # print(np.unwrap(self.pcoords[0]-theta))
+    #     # np.absolute(np.unwrap(self.pcoords[0]-theta))
+    #     return self.pcoords[1, diff.argmin()]
+
+        # def interp_der(self, theta):
+    #     # return self.f(theta % 2*np.pi)
+    #     return splev(theta % 2 * np.pi, self.spline, der=1)
