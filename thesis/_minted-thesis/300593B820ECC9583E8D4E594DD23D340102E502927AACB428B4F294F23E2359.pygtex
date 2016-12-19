@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Linear}
+\PYG{n}{f} \PYG{o}{=} \PYG{n}{interpolate}\PYG{o}{.}\PYG{n}{interp1d}\PYG{p}{(}\PYG{n}{xpoints}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{)}
+\PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+\PYG{n}{y} \PYG{o}{=} \PYG{n}{f}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Spline}
+\PYG{n}{tck} \PYG{o}{=} \PYG{n}{interpolate}\PYG{o}{.}\PYG{n}{splrep}\PYG{p}{(}\PYG{n}{xpoints}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{,} \PYG{n}{k}\PYG{o}{=}\PYG{n}{order}\PYG{p}{,} \PYG{n}{per}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+\PYG{n}{y} \PYG{o}{=} \PYG{n}{interpolate}\PYG{o}{.}\PYG{n}{splev}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{tck}\PYG{p}{)}
+\end{Verbatim}

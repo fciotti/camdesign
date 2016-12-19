@@ -5,12 +5,11 @@ from utils import cartesian, polar
 
 # Super fast
 def flat(pcoords):
-    res = np.copy(pcoords)
-    tmp = np.empty_like(pcoords[0])
+    result = np.empty_like(pcoords)
     for i, theta0 in enumerate(pcoords[0]):
-        rr = pcoords[1] / np.cos(pcoords[0] - theta0)
-        res[1][i] = np.min(rr[rr > 0])
-    return res
+        distances = pcoords[1] / np.cos(pcoords[0] - theta0)
+        result[1][i] = np.min(distances[distances > 0])
+    return result
 
 
 # Fast
@@ -25,5 +24,4 @@ def roller(thetas, rhos, radius):
     result = pco.Execute(-radius*scale)[0]
     p = polar(*zip(*result))
     p[1] /= scale
-    print(len(p[0]))
     return p

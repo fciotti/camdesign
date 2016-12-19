@@ -1,0 +1,10 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Build triangles for side face}
+\PYG{n}{vertices1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{points}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{([}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{points}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{l+m+mi}{1}\PYG{p}{])),} \PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{vertices2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{points}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ones}\PYG{p}{([}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{points}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{*} \PYG{n}{width}\PYG{p}{),} \PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{tri3\PYGZus{}1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{empty}\PYG{p}{([}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{points}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{])}
+\PYG{n}{tri3\PYGZus{}2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{empty\PYGZus{}like}\PYG{p}{(}\PYG{n}{tri3\PYGZus{}1}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{vertices1}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]):}
+    \PYG{n}{tri3\PYGZus{}1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n}{vertices1}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{vertices1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{vertices2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]]}
+    \PYG{n}{tri3\PYGZus{}2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n}{vertices2}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{vertices2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{vertices1}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]]}
+\end{Verbatim}

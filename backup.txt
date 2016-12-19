@@ -180,6 +180,8 @@ def draw_bad(cam, follower, omega, steps):
 
 cam.py
 
+    # self.pcoords = envelope.flat2(self.pcoords[0], self.travel.y + self.radius, self.pcoords[0]+np.pi/2)
+
     # Search nearest theta and return its rho
     # def near_rho(self, theta):
     #     theta %= 2*np.pi
@@ -193,3 +195,99 @@ cam.py
         # def interp_der(self, theta):
     #     # return self.f(theta % 2*np.pi)
     #     return splev(theta % 2 * np.pi, self.spline, der=1)
+
+main.py
+
+parser.add_argument('--steps', '-s', type=int, default=10000, help='global precision')
+
+parser_gen = subparsers.add_parser('gen')
+#parser_gen.add_argument('cam', choices=['rot', 'transl', 'travel'], default='rot', help='what is generated')
+parser_gen.add_argument('--type', '-t', choices=['spline', 'linear'], default='linear',
+                        help='type of interpolation')
+parser_gen.add_argument('--order', '-k', type=int, default=3, help='spline order')
+parser_gen.add_argument('--input', '-i', help='input file', required=True)
+parser_gen.add_argument('-n', type=int, default=1)
+parser_gen.add_argument('--radius', '-r', type=float, help='base radius', required=True)
+parser_gen.add_argument('--follower', '-f', choices=['knife', 'roller', 'flat'], default='knife',
+                        help='follower type')
+parser_gen.add_argument('--offset', '-d', type=float, default=0)
+parser_gen.add_argument('--fradius', '-q', type=float, help='follower radius')
+parser_gen.add_argument('--output', '-o', help='output file')
+parser_gen.add_argument('--ccw', action='store_true')
+
+poly.py
+
+import argparse
+import numpy as np
+from math import factorial
+import matplotlib.pyplot as plt
+
+
+# k-th derivative of x^n
+def der(x, n, k):
+    if k > n:
+        return 0
+    return factorial(n)/factorial(n-k)*x**(n-k)
+
+parser = argparse.ArgumentParser(description='camdesign')
+parser.add_argument('positions', help='path of positions'' file')
+parser.add_argument('-n')
+parser.add_argument('-o', type=int, help='matching O derivatives')
+parser.add_argument('--radius', '-r')
+
+args = parser.parse_args()
+
+positions = list(map(int, open(args.positions).readlines()))
+
+a = len(positions) + 1
+d = a + args.o
+
+# Vandermonde matrix
+A = np.zeros((d, d))
+
+B = np.zeros(d)
+
+for row in range(0, a-1):
+    B[row] = positions[row]
+    for col in range(0, d):
+        A[row, col] = (row/a)**col
+
+# Match initial and final position
+B[a-1] = B[0]
+for col in range(0, d):
+    A[a-1, col] = 1
+
+# Match derivatives
+for row in range(a, d):
+    B[row] = 0
+    for col in range(0, d):
+        A[row, col] = der(1, col, row-a+1) - der(0, col, row-a+1)
+
+c = np.linalg.solve(A, B)
+
+print(A, '\n\n', B, '\n\n', c)
+
+x = np.linspace(0, 1, num=200)
+y = np.polyval(c[::-1], x)
+
+print(x, y)
+plt.plot(x, y)
+plt.plot(np.linspace(0, 1*len(positions)/(len(positions)+1), num=len(positions)), positions)
+plt.show()
+
+interpolation.py
+
+def lev(kind, levels, steps, order=None):
+    x, y = [], []
+    for i in range(0, len(levels) - 1):
+        x0 = levels[i][0] + levels[i][1]
+        y0 = levels[i][2]
+        x1 = levels[i+1][0]
+        y1 = levels[i+1][2]
+        if kind == 'polynomial':
+            xs, ys = func(kind, x0, x1, y0, y1, steps, order)
+        else:
+            xs, ys = func(kind, x0, x1, y0, y1, steps)
+        x.extend(xs)
+        y.extend(ys)
+    return x, y

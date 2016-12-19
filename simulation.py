@@ -3,7 +3,6 @@ from utils import *
 from matplotlib.patches import Circle, Wedge
 import numpy as np
 from shapely.geometry import LinearRing, LineString
-# from shapely.affinity import translate
 import matplotlib.animation as animation
 
 
@@ -35,8 +34,6 @@ def draw(cam, follower, omega, steps, precision):
     cam_body = LinearRing(cam_points).simplify(precision)
     height = np.max(cam.rho + follower.radius)
     rho_max = cam.rho.max()
-    # if follower.kind == 'flat':
-    #    foll_body = LineString([(-rho_max, height), (rho_max, height)])
     if follower.kind == 'knife':
         foll_body = LineString([(follower.offset, -rho_max), (follower.offset, rho_max)])
     elif follower.kind == 'roller':
@@ -49,9 +46,9 @@ def draw(cam, follower, omega, steps, precision):
     foll_heights = np.empty([steps])
 
     if follower.kind == 'roller':
-        sv = follower.radius / 2
+        s = follower.radius / 2
     else:
-        sv = cam.rho.min() / 2
+        s = cam.rho.min() / 2
 
     progress = Progress()
     for i, theta0 in enumerate(np.linspace(0, 2*np.pi, steps)):
@@ -59,7 +56,6 @@ def draw(cam, follower, omega, steps, precision):
 
         if follower.kind == 'roller':
             cam_body = LinearRing(cam_coords[i].T)  # maybe a rotation could be more efficient
-            s = sv
             if foll_body.intersects(cam_body):
                 translate(foll_body, yoff=s)
                 height += s
@@ -95,7 +91,7 @@ def draw(cam, follower, omega, steps, precision):
                 diff = height - foll_heights[i-1]
                 height += diff
                 translate(foll_body, yoff=diff)
-                sv = abs(diff) if diff != 0 else precision
+                s = abs(diff) if diff != 0 else precision
         elif follower.kind == 'flat':
             foll_heights[i] = max(cam_coords[i][1])
         else:

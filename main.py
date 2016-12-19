@@ -21,37 +21,37 @@ class ArgumentParser(argparse.ArgumentParser):
 
     # Do not exit after printing help
     def exit(self, status=0, message=None):
-        if message:
-            self._print_message(message)
-        self.error(None)
+        # if message:
+        #     self._print_message(message)
+        self.error(message)
 
 interp = ['spline', 'linear', 'harmonic', 'cycloidal', 'parabolic', 'polynomial']
 targets = ['travel', 'cam', 'conj']
 
-parser = ArgumentParser(description='camdesign', prog='', add_help=False)
-subparsers = parser.add_subparsers(dest='command')
+parser = ArgumentParser(prog='', add_help=False)
+subparsers = parser.add_subparsers(dest='command', prog='')
 subparsers.required = True
 
 parser_help = subparsers.add_parser('help', help='show this help message')
 parser_exit = subparsers.add_parser('exit')
 
 parent_travel = ArgumentParser(add_help=False)
-parent_travel.add_argument('--kind', '-k', choices=interp, help='kind of interpolation')
-parent_travel.add_argument('--order', '-o', type=int, help='spline/polynomial order')
+parent_travel.add_argument('-k', dest='kind', choices=interp, help='kind of interpolation')
+parent_travel.add_argument('--order', '-o', type=int, help='spline/polynomial order', metavar='O')
 parent_travel.add_argument('-n', type=int, help='repetitions per cycle')
-parent_travel.add_argument('--steps', '-s', type=int, help='interpolation steps')
+parent_travel.add_argument('--steps', '-s', type=int, help='interpolation steps', metavar='S')
 parent_travel.add_argument('--x0', '-a', type=float, help='lower bound of function evaluation')
 parent_travel.add_argument('--x1', '-b', type=float, help='upper bound of function evaluation')
 
 parent_cam = ArgumentParser(add_help=False)
-parent_cam.add_argument('--radius', '-r', type=float, help='base radius')
+parent_cam.add_argument('--radius', '-r', type=float, help='base radius', metavar='R')
 parent_cam.add_argument('--ccw', action='store_const', const=True, help='counterclockwise')
 parent_cam.add_argument('--flat', '-f', action='store_const', const=True, help='flat follower')
-parent_cam.add_argument('--offset', '-d', type=float, help='follower offset')
-parent_cam.add_argument('--fradius', '-q', type=float, help='follower radius (set 0 for knife edge)')
+parent_cam.add_argument('--offset', '-d', type=float, help='follower offset', metavar='OFF')
+parent_cam.add_argument('--fradius', '-q', type=float, help='follower radius (set 0 for knife edge)', metavar='R')
 
 parent_conj = ArgumentParser(add_help=False)
-parent_conj.add_argument('--breadth', '-b', type=float, help='breadth, if 0 calculate optimal (default)')
+parent_conj.add_argument('--breadth', '-b', type=float, help='breadth, if 0 calculate optimal (default)', metavar='B')
 
 parser_gen = subparsers.add_parser('gen', help='generate, unspecified variables set to default')
 subparsers_gen = parser_gen.add_subparsers(dest='target')
@@ -61,8 +61,8 @@ parent_gen_travel_defaults = ArgumentParser(add_help=False)
 parser_gen_travel = subparsers_gen.add_parser('travel', parents=[parent_travel],
                                               formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser_gen_travel_source = parser_gen_travel.add_mutually_exclusive_group(required=True)
-parser_gen_travel_source.add_argument('--input', '-i', help='input file')
-parser_gen_travel_source.add_argument('--function', '-f', help='function of x')
+parser_gen_travel_source.add_argument('--input', '-i', help='input file', metavar='IN')
+parser_gen_travel_source.add_argument('--function', '-f', help='function of x', metavar='F')
 parser_gen_travel.set_defaults(kind='linear', order=3, n=1, steps=10000, x0=0, x1=1)
 
 parser_gen_cam = subparsers_gen.add_parser('cam', parents=[parent_cam],
@@ -99,17 +99,20 @@ parser_draw.add_argument('--cartesian', '-c', action='store_true')
 
 parser_export = subparsers.add_parser('export', help='export stl model')
 parser_export.add_argument('file', help='output stl file')
-parser_export.add_argument('width', help='cam width')
+parser_export.add_argument('width', type=float, help='cam width')
+parser_export.add_argument('--conj', '-c', action='store_true')
 
 parser_sim = subparsers.add_parser('sim', help='dynamic simulation',
                                    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser_sim_velocity = parser_sim.add_mutually_exclusive_group(required=False)
-parser_sim_velocity.add_argument('--omega', '-w', type=float, default=1, help='angular velocity')
+parser_sim_velocity.add_argument('--omega', '-w', type=float, default=1, help='angular velocity', metavar='W')
 parser_sim_velocity.add_argument('--rpm', '-r', type=float, help='revolutions per minute')
-parser_sim.add_argument('--steps', '-s', type=int, default=500, help='steps')
-parser_sim.add_argument('--precision', '-p', type=float, default=0.001, help='precision')
-parser_sim.add_argument('--gravity', '-g', type=float, default=9.8, help='gravitational acceleration')
+parser_sim.add_argument('--steps', '-s', type=int, default=500, help='steps', metavar='S')
+parser_sim.add_argument('--precision', '-p', type=float, default=0.001, help='precision', metavar='P')
+parser_sim.add_argument('--gravity', '-g', type=float, default=9.8, help='gravitational acceleration', metavar='G')
+
 # TODO Simulation with conj, not simple
+# TODO Export 2d polyline in DXF, ai, eps, pdf...
 
 travel = Travel()
 follower = Follower()
@@ -118,7 +121,7 @@ cam = Cam(travel, follower)
 while True:
     try:
         command = input('camdesign: ').split()
-        if command[0] == 'update':
+        if len(command) and command[0] == 'update':
             # defaults = parser._defaults
             # parser._defaults = {}
             parser_gen_travel.set_defaults(kind=None, order=None, n=None, steps=None, x0=None, x1=None)
@@ -258,11 +261,12 @@ while True:
             simulation.draw(cam, follower, args.omega, args.steps, args.precision)
         # EXPORT
         elif args.command == 'export':
-            export.stl(cam, args.file, args.width)
+            export.stl(cam, args.file, args.width, args.conj)
     except (ArgumentError, argparse.ArgumentError, argparse.ArgumentTypeError) as ex:
         if isinstance(ex.args[0], ArgumentParser):
-            ex.args[0].print_usage()
-            print(ex.args[1])
+            if ex.args[1] is not None:
+                print(ex.args[1])
+                ex.args[0].print_usage()
         else:
             print(ex)
     except FileNotFoundError:

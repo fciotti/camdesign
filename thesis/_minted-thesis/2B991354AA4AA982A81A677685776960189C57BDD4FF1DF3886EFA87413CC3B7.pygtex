@@ -1,0 +1,47 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{from} \PYG{n+nn}{stl} \PYG{k+kn}{import} \PYG{n}{mesh}
+\PYG{k+kn}{from} \PYG{n+nn}{scipy.spatial} \PYG{k+kn}{import} \PYG{n}{Delaunay}
+\PYG{k+kn}{from} \PYG{n+nn}{matplotlib} \PYG{k+kn}{import} \PYG{n}{pyplot} \PYG{k}{as} \PYG{n}{plt}
+\PYG{k+kn}{from} \PYG{n+nn}{mpl\PYGZus{}toolkits} \PYG{k+kn}{import} \PYG{n}{mplot3d}
+\PYG{k+kn}{from} \PYG{n+nn}{utils} \PYG{k+kn}{import} \PYG{n}{cartesian}
+
+
+\PYG{k}{def} \PYG{n+nf}{stl}\PYG{p}{(}\PYG{n}{cam}\PYG{p}{,} \PYG{n}{filename}\PYG{p}{,} \PYG{n}{width}\PYG{p}{,} \PYG{n}{conj}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{conj}\PYG{p}{:}
+        \PYG{n}{points} \PYG{o}{=} \PYG{n}{cartesian}\PYG{p}{(}\PYG{o}{*}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{conj\PYGZus{}pcoords}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{points} \PYG{o}{=} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{points}
+    
+    \PYG{c+c1}{\PYGZsh{} 2D Delaunay triangulation for front face and building of lower and upper faces}
+    \PYG{n}{tri0} \PYG{o}{=} \PYG{n}{points}\PYG{p}{[}\PYG{n}{Delaunay}\PYG{p}{(}\PYG{n}{points}\PYG{p}{)}\PYG{o}{.}\PYG{n}{simplices}\PYG{p}{]}
+    \PYG{n}{tri1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{tri0}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{([}\PYG{n}{tri0}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{tri0}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{l+m+mi}{1}\PYG{p}{])),} \PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{n}{tri2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{tri0}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ones}\PYG{p}{([}\PYG{n}{tri0}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{tri0}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{*} \PYG{n}{width}\PYG{p}{),} \PYG{l+m+mi}{2}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} Build triangles for side face}
+    \PYG{n}{vertices1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{points}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{([}\PYG{n}{points}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{l+m+mi}{1}\PYG{p}{])),} \PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{vertices2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{points}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ones}\PYG{p}{([}\PYG{n}{points}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{l+m+mi}{1}\PYG{p}{])} \PYG{o}{*} \PYG{n}{width}\PYG{p}{),} \PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{tri3\PYGZus{}1} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{empty}\PYG{p}{([}\PYG{n}{points}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{])}
+    \PYG{n}{tri3\PYGZus{}2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{empty\PYGZus{}like}\PYG{p}{(}\PYG{n}{tri3\PYGZus{}1}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{vertices1}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]):}
+        \PYG{n}{tri3\PYGZus{}1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n}{vertices1}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{vertices1}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{vertices2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]]}
+        \PYG{n}{tri3\PYGZus{}2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n}{vertices2}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{vertices2}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{vertices1}\PYG{p}{[}\PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]]}
+
+    \PYG{c+c1}{\PYGZsh{} Concatenate and save}
+    \PYG{n}{tri} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{tri1}\PYG{p}{,} \PYG{n}{tri2}\PYG{p}{,} \PYG{n}{tri3\PYGZus{}1}\PYG{p}{,} \PYG{n}{tri3\PYGZus{}2}\PYG{p}{))}
+    \PYG{n}{data} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{tri}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{mesh}\PYG{o}{.}\PYG{n}{Mesh}\PYG{o}{.}\PYG{n}{dtype}\PYG{p}{)}
+    \PYG{n}{data}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}vectors\PYGZsq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tri}
+    \PYG{n}{prism} \PYG{o}{=} \PYG{n}{mesh}\PYG{o}{.}\PYG{n}{Mesh}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}
+    \PYG{n}{prism}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} Ugly plotting}
+    \PYG{n}{fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{()}
+    \PYG{n}{ax} \PYG{o}{=} \PYG{n}{mplot3d}\PYG{o}{.}\PYG{n}{Axes3D}\PYG{p}{(}\PYG{n}{fig}\PYG{p}{)}
+    \PYG{n}{ax}\PYG{o}{.}\PYG{n}{add\PYGZus{}collection3d}\PYG{p}{(}\PYG{n}{mplot3d}\PYG{o}{.}\PYG{n}{art3d}\PYG{o}{.}\PYG{n}{Poly3DCollection}\PYG{p}{(}\PYG{n}{prism}\PYG{o}{.}\PYG{n}{vectors}\PYG{p}{))}
+
+    \PYG{c+c1}{\PYGZsh{} Auto scale}
+    \PYG{n}{scale} \PYG{o}{=} \PYG{n}{prism}\PYG{o}{.}\PYG{n}{points}\PYG{o}{.}\PYG{n}{flatten}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{ax}\PYG{o}{.}\PYG{n}{auto\PYGZus{}scale\PYGZus{}xyz}\PYG{p}{(}\PYG{n}{scale}\PYG{p}{,} \PYG{n}{scale}\PYG{p}{,} \PYG{n}{scale}\PYG{p}{)}
+
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\end{Verbatim}

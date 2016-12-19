@@ -1,0 +1,25 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{Follower}\PYG{p}{:}
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{flat}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{offset}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{radius}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{):}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{flat} \PYG{o}{=} \PYG{n}{flat}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{offset} \PYG{o}{=} \PYG{n}{offset}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{radius} \PYG{o}{=} \PYG{n}{radius}
+
+    \PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}getattr\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{name}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{name} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}kind\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{flat}\PYG{p}{:}
+                \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}flat\PYGZsq{}}
+            \PYG{k}{elif} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{radius} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+                \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}knife\PYGZsq{}}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{return} \PYG{l+s+s1}{\PYGZsq{}roller\PYGZsq{}}
+        \PYG{k}{return} \PYG{n+nb+bp}{None}
+
+    \PYG{k}{def} \PYG{n+nf}{update}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{flat}\PYG{p}{,} \PYG{n}{offset}\PYG{p}{,} \PYG{n}{radius}\PYG{p}{):}
+        \PYG{k}{if} \PYG{n}{flat} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{flat} \PYG{o}{=} \PYG{n}{flat}
+        \PYG{k}{if} \PYG{n}{offset} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{offset} \PYG{o}{=} \PYG{n}{offset}
+        \PYG{k}{if} \PYG{n}{radius} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{radius} \PYG{o}{=} \PYG{n}{radius}
+\end{Verbatim}

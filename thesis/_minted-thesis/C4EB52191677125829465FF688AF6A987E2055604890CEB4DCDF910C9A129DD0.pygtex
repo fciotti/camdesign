@@ -1,0 +1,277 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{argparse}
+\PYG{k+kn}{from} \PYG{n+nn}{travel} \PYG{k+kn}{import} \PYG{n}{Travel}
+\PYG{k+kn}{from} \PYG{n+nn}{cam} \PYG{k+kn}{import} \PYG{n}{Cam}
+\PYG{k+kn}{from} \PYG{n+nn}{follower} \PYG{k+kn}{import} \PYG{n}{Follower}
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k+kn}{as} \PYG{n+nn}{plt}
+\PYG{k+kn}{import} \PYG{n+nn}{fileio}
+\PYG{k+kn}{import} \PYG{n+nn}{simulation}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{from} \PYG{n+nn}{utils} \PYG{k+kn}{import} \PYG{n}{HandledValueError}\PYG{p}{,} \PYG{n}{plot\PYGZus{}polar}
+\PYG{k+kn}{import} \PYG{n+nn}{export}
+
+
+\PYG{k}{class} \PYG{n+nc}{ArgumentError}\PYG{p}{(}\PYG{n+ne}{Exception}\PYG{p}{):}
+    \PYG{k}{pass}
+
+
+\PYG{c+c1}{\PYGZsh{} Overriding ArgumentParser error handling}
+\PYG{k}{class} \PYG{n+nc}{ArgumentParser}\PYG{p}{(}\PYG{n}{argparse}\PYG{o}{.}\PYG{n}{ArgumentParser}\PYG{p}{):}
+    \PYG{k}{def} \PYG{n+nf}{error}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{message}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n}{ArgumentError}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{message}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} Do not exit after printing help}
+    \PYG{k}{def} \PYG{n+nf}{exit}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{status}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{message}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+        \PYG{c+c1}{\PYGZsh{} if message:}
+        \PYG{c+c1}{\PYGZsh{}     self.\PYGZus{}print\PYGZus{}message(message)}
+        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{error}\PYG{p}{(}\PYG{n}{message}\PYG{p}{)}
+
+\PYG{n}{interp} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}spline\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}linear\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}harmonic\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}cycloidal\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}parabolic\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}polynomial\PYGZsq{}}\PYG{p}{]}
+\PYG{n}{targets} \PYG{o}{=} \PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}conj\PYGZsq{}}\PYG{p}{]}
+
+\PYG{n}{parser} \PYG{o}{=} \PYG{n}{ArgumentParser}\PYG{p}{(}\PYG{n}{prog}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{,} \PYG{n}{add\PYGZus{}help}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{subparsers} \PYG{o}{=} \PYG{n}{parser}\PYG{o}{.}\PYG{n}{add\PYGZus{}subparsers}\PYG{p}{(}\PYG{n}{dest}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}command\PYGZsq{}}\PYG{p}{,} \PYG{n}{prog}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{required} \PYG{o}{=} \PYG{n+nb+bp}{True}
+
+\PYG{n}{parser\PYGZus{}help} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}help\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}show this help message\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}exit} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}exit\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{parent\PYGZus{}travel} \PYG{o}{=} \PYG{n}{ArgumentParser}\PYG{p}{(}\PYG{n}{add\PYGZus{}help}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}travel}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}k\PYGZsq{}}\PYG{p}{,} \PYG{n}{dest}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}kind\PYGZsq{}}\PYG{p}{,} \PYG{n}{choices}\PYG{o}{=}\PYG{n}{interp}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}kind of interpolation\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}travel}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}order\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}o\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}spline/polynomial order\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}O\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}travel}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}n\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}repetitions per cycle\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}travel}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}steps\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}s\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}interpolation steps\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}S\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}travel}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}x0\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}a\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}lower bound of function evaluation\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}travel}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}x1\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}b\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}upper bound of function evaluation\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{parent\PYGZus{}cam} \PYG{o}{=} \PYG{n}{ArgumentParser}\PYG{p}{(}\PYG{n}{add\PYGZus{}help}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}cam}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}radius\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}r\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}base radius\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}R\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}cam}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}ccw\PYGZsq{}}\PYG{p}{,} \PYG{n}{action}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}store\PYGZus{}const\PYGZsq{}}\PYG{p}{,} \PYG{n}{const}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}counterclockwise\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}cam}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}flat\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}f\PYGZsq{}}\PYG{p}{,} \PYG{n}{action}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}store\PYGZus{}const\PYGZsq{}}\PYG{p}{,} \PYG{n}{const}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}flat follower\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}cam}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}offset\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}d\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}follower offset\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}OFF\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}cam}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}fradius\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}q\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}follower radius (set 0 for knife edge)\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}R\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{parent\PYGZus{}conj} \PYG{o}{=} \PYG{n}{ArgumentParser}\PYG{p}{(}\PYG{n}{add\PYGZus{}help}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{parent\PYGZus{}conj}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}breadth\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}b\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}breadth, if 0 calculate optimal (default)\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}B\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{parser\PYGZus{}gen} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}gen\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}generate, unspecified variables set to default\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{subparsers\PYGZus{}gen} \PYG{o}{=} \PYG{n}{parser\PYGZus{}gen}\PYG{o}{.}\PYG{n}{add\PYGZus{}subparsers}\PYG{p}{(}\PYG{n}{dest}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}target\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{subparsers\PYGZus{}gen}\PYG{o}{.}\PYG{n}{required} \PYG{o}{=} \PYG{n+nb+bp}{True}
+
+\PYG{n}{parent\PYGZus{}gen\PYGZus{}travel\PYGZus{}defaults} \PYG{o}{=} \PYG{n}{ArgumentParser}\PYG{p}{(}\PYG{n}{add\PYGZus{}help}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}travel} \PYG{o}{=} \PYG{n}{subparsers\PYGZus{}gen}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{,} \PYG{n}{parents}\PYG{o}{=}\PYG{p}{[}\PYG{n}{parent\PYGZus{}travel}\PYG{p}{],}
+                                              \PYG{n}{formatter\PYGZus{}class}\PYG{o}{=}\PYG{n}{argparse}\PYG{o}{.}\PYG{n}{ArgumentDefaultsHelpFormatter}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}travel\PYGZus{}source} \PYG{o}{=} \PYG{n}{parser\PYGZus{}gen\PYGZus{}travel}\PYG{o}{.}\PYG{n}{add\PYGZus{}mutually\PYGZus{}exclusive\PYGZus{}group}\PYG{p}{(}\PYG{n}{required}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}travel\PYGZus{}source}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}input\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}i\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}input file\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}IN\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}travel\PYGZus{}source}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}function\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}f\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}function of x\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}F\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}travel}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{kind}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}linear\PYGZsq{}}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{n}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{steps}\PYG{o}{=}\PYG{l+m+mi}{10000}\PYG{p}{,} \PYG{n}{x0}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{x1}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}cam} \PYG{o}{=} \PYG{n}{subparsers\PYGZus{}gen}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{,} \PYG{n}{parents}\PYG{o}{=}\PYG{p}{[}\PYG{n}{parent\PYGZus{}cam}\PYG{p}{],}
+                                           \PYG{n}{formatter\PYGZus{}class}\PYG{o}{=}\PYG{n}{argparse}\PYG{o}{.}\PYG{n}{ArgumentDefaultsHelpFormatter}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}cam}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{radius}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{ccw}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{flat}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{offset}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{fradius}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}conj} \PYG{o}{=} \PYG{n}{subparsers\PYGZus{}gen}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}conj\PYGZsq{}}\PYG{p}{,} \PYG{n}{parents}\PYG{o}{=}\PYG{p}{[}\PYG{n}{parent\PYGZus{}conj}\PYG{p}{])}
+\PYG{n}{parser\PYGZus{}gen\PYGZus{}conj}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{breadth}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Update has the same arguments as gen, but without overwriting with default values}
+\PYG{n}{parser\PYGZus{}update} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}update\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}update, unspecified variables unmodified\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{subparsers\PYGZus{}update} \PYG{o}{=} \PYG{n}{parser\PYGZus{}update}\PYG{o}{.}\PYG{n}{add\PYGZus{}subparsers}\PYG{p}{(}\PYG{n}{dest}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}target\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{subparsers\PYGZus{}update}\PYG{o}{.}\PYG{n}{required} \PYG{o}{=} \PYG{n+nb+bp}{True}
+\PYG{n}{parser\PYGZus{}update\PYGZus{}travel} \PYG{o}{=} \PYG{n}{subparsers\PYGZus{}update}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{,} \PYG{n}{parents}\PYG{o}{=}\PYG{p}{[}\PYG{n}{parent\PYGZus{}travel}\PYG{p}{])}
+\PYG{n}{parser\PYGZus{}update\PYGZus{}cam} \PYG{o}{=} \PYG{n}{subparsers\PYGZus{}update}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{,} \PYG{n}{parents}\PYG{o}{=}\PYG{p}{[}\PYG{n}{parent\PYGZus{}cam}\PYG{p}{])}
+\PYG{n}{parser\PYGZus{}update\PYGZus{}cam}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}cw\PYGZsq{}}\PYG{p}{,} \PYG{n}{dest}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}ccw\PYGZsq{}}\PYG{p}{,} \PYG{n}{action}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}store\PYGZus{}const\PYGZsq{}}\PYG{p}{,} \PYG{n}{const}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}clockwise\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}update\PYGZus{}cam}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}nonflat\PYGZsq{}}\PYG{p}{,} \PYG{n}{dest}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}flat\PYGZsq{}}\PYG{p}{,} \PYG{n}{action}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}store\PYGZus{}const\PYGZsq{}}\PYG{p}{,} \PYG{n}{const}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}non flat follower\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}update\PYGZus{}conj} \PYG{o}{=} \PYG{n}{subparsers\PYGZus{}update}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}conj\PYGZsq{}}\PYG{p}{,} \PYG{n}{parents}\PYG{o}{=}\PYG{p}{[}\PYG{n}{parent\PYGZus{}conj}\PYG{p}{])}
+
+\PYG{n}{parser\PYGZus{}load} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}load\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}load from file\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}load}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}target\PYGZsq{}}\PYG{p}{,} \PYG{n}{choices}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{])}
+\PYG{n}{parser\PYGZus{}load}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}file\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}input file\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{parser\PYGZus{}save} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}save\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}save to file\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}save}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}target\PYGZsq{}}\PYG{p}{,} \PYG{n}{choices}\PYG{o}{=}\PYG{n}{targets}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}save}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}file\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}output file\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{parser\PYGZus{}draw} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}draw\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}plot representation\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}draw}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}targets\PYGZsq{}}\PYG{p}{,} \PYG{n}{nargs}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}+\PYGZsq{}}\PYG{p}{,} \PYG{n}{choices}\PYG{o}{=}\PYG{n}{targets}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}draw}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}unroll\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}u\PYGZsq{}}\PYG{p}{,} \PYG{n}{action}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}store\PYGZus{}true\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}draw}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}cartesian\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}c\PYGZsq{}}\PYG{p}{,} \PYG{n}{action}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}store\PYGZus{}true\PYGZsq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} parser\PYGZus{}print = subparsers.add\PYGZus{}parser(\PYGZsq{}print\PYGZsq{}, help=\PYGZsq{}show current variables\PYGZsq{})}
+
+\PYG{n}{parser\PYGZus{}export} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}export\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}export stl model\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}export}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}file\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}output stl file\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}export}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}width\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}cam width\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}export}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}conj\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}c\PYGZsq{}}\PYG{p}{,} \PYG{n}{action}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}store\PYGZus{}true\PYGZsq{}}\PYG{p}{)}
+
+\PYG{n}{parser\PYGZus{}sim} \PYG{o}{=} \PYG{n}{subparsers}\PYG{o}{.}\PYG{n}{add\PYGZus{}parser}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}sim\PYGZsq{}}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}dynamic simulation\PYGZsq{}}\PYG{p}{,}
+                                   \PYG{n}{formatter\PYGZus{}class}\PYG{o}{=}\PYG{n}{argparse}\PYG{o}{.}\PYG{n}{ArgumentDefaultsHelpFormatter}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}sim\PYGZus{}velocity} \PYG{o}{=} \PYG{n}{parser\PYGZus{}sim}\PYG{o}{.}\PYG{n}{add\PYGZus{}mutually\PYGZus{}exclusive\PYGZus{}group}\PYG{p}{(}\PYG{n}{required}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}sim\PYGZus{}velocity}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}omega\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}w\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{default}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}angular velocity\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}W\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}sim\PYGZus{}velocity}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}rpm\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}r\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}revolutions per minute\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}sim}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}steps\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}s\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{default}\PYG{o}{=}\PYG{l+m+mi}{500}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}steps\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}S\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}sim}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}precision\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}p\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{default}\PYG{o}{=}\PYG{l+m+mf}{0.001}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}precision\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}P\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{parser\PYGZus{}sim}\PYG{o}{.}\PYG{n}{add\PYGZus{}argument}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}gravity\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}g\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{type}\PYG{o}{=}\PYG{n+nb}{float}\PYG{p}{,} \PYG{n}{default}\PYG{o}{=}\PYG{l+m+mf}{9.8}\PYG{p}{,} \PYG{n}{help}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}gravitational acceleration\PYGZsq{}}\PYG{p}{,} \PYG{n}{metavar}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}G\PYGZsq{}}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} TODO Simulation with conj, not simple}
+\PYG{c+c1}{\PYGZsh{} TODO Export 2d polyline in DXF, ai, eps, pdf...}
+
+\PYG{n}{travel} \PYG{o}{=} \PYG{n}{Travel}\PYG{p}{()}
+\PYG{n}{follower} \PYG{o}{=} \PYG{n}{Follower}\PYG{p}{()}
+\PYG{n}{cam} \PYG{o}{=} \PYG{n}{Cam}\PYG{p}{(}\PYG{n}{travel}\PYG{p}{,} \PYG{n}{follower}\PYG{p}{)}
+
+\PYG{k}{while} \PYG{n+nb+bp}{True}\PYG{p}{:}
+    \PYG{k}{try}\PYG{p}{:}
+        \PYG{n}{command} \PYG{o}{=} \PYG{n+nb}{input}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}camdesign: \PYGZsq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{split}\PYG{p}{()}
+        \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{command}\PYG{p}{)} \PYG{o+ow}{and} \PYG{n}{command}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}update\PYGZsq{}}\PYG{p}{:}
+            \PYG{c+c1}{\PYGZsh{} defaults = parser.\PYGZus{}defaults}
+            \PYG{c+c1}{\PYGZsh{} parser.\PYGZus{}defaults = \PYGZob{}\PYGZcb{}}
+            \PYG{n}{parser\PYGZus{}gen\PYGZus{}travel}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{kind}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{n}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{steps}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{x0}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{x1}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}
+            \PYG{n}{parser\PYGZus{}gen\PYGZus{}cam}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{radius}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{ccw}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{flat}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{offset}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{,} \PYG{n}{fradius}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}
+            \PYG{n}{parser\PYGZus{}gen\PYGZus{}conj}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{breadth}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{)}
+            \PYG{n}{args} \PYG{o}{=} \PYG{n}{parser}\PYG{o}{.}\PYG{n}{parse\PYGZus{}args}\PYG{p}{(}\PYG{n}{command}\PYG{p}{)}
+            \PYG{n}{parser\PYGZus{}gen\PYGZus{}travel}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{kind}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}linear\PYGZsq{}}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{n}{n}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{steps}\PYG{o}{=}\PYG{l+m+mi}{10000}\PYG{p}{,} \PYG{n}{x0}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{x1}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
+            \PYG{n}{parser\PYGZus{}gen\PYGZus{}cam}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{radius}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{ccw}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{flat}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{offset}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{fradius}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+            \PYG{n}{parser\PYGZus{}gen\PYGZus{}conj}\PYG{o}{.}\PYG{n}{set\PYGZus{}defaults}\PYG{p}{(}\PYG{n}{breadth}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} parser.\PYGZus{}defaults = defaults}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{args} \PYG{o}{=} \PYG{n}{parser}\PYG{o}{.}\PYG{n}{parse\PYGZus{}args}\PYG{p}{(}\PYG{n}{command}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} HELP}
+        \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}help\PYGZsq{}}\PYG{p}{:}
+            \PYG{n}{parser}\PYG{o}{.}\PYG{n}{print\PYGZus{}help}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} EXIT}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}exit\PYGZsq{}}\PYG{p}{:}
+            \PYG{n+nb}{exit}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} GEN}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}gen\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{:}
+                \PYG{n}{travel}\PYG{o}{.}\PYG{n}{gen}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{input}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{function}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{x1}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{kind}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{order}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{steps}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{n}\PYG{p}{)}
+                \PYG{k}{if} \PYG{n}{cam}\PYG{p}{()} \PYG{o+ow}{and} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{loaded}\PYG{p}{:}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Updating cam\PYGZsq{}}\PYG{p}{)}
+                    \PYG{n}{cam}\PYG{o}{.}\PYG{n}{gen}\PYG{p}{()}
+            \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{travel}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Travel undefined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{follower}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{flat}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{offset}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{fradius}\PYG{p}{)}
+                \PYG{n}{cam}\PYG{o}{.}\PYG{n}{gen}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{radius}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{ccw}\PYG{p}{)}
+            \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}conj\PYGZsq{}}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Cam undefined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{cam}\PYG{o}{.}\PYG{n}{gen\PYGZus{}conjugated}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{breadth}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} LOAD}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}load\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{:}
+                \PYG{n}{travel}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{file}\PYG{p}{)}
+            \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{:}
+                \PYG{n}{fileio}\PYG{o}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{file}\PYG{p}{,} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} SAVE}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}save\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{travel}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Travel undefined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{fileio}\PYG{o}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{file}\PYG{p}{,} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)}
+            \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Cam undefined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{fileio}\PYG{o}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{file}\PYG{p}{,} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+
+        \PYG{c+c1}{\PYGZsh{} DRAW}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}draw\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{args}\PYG{o}{.}\PYG{n}{targets}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{travel}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Travel undefined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{ax} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{)}
+                \PYG{n}{ax}\PYG{o}{.}\PYG{n}{margins}\PYG{p}{(}\PYG{l+m+mf}{0.1}\PYG{p}{)}
+                \PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{travel}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)}
+                \PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Follower travel\PYGZsq{}}\PYG{p}{)}
+                \PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+            \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{args}\PYG{o}{.}\PYG{n}{targets} \PYG{o+ow}{or} \PYG{l+s+s1}{\PYGZsq{}conj\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{args}\PYG{o}{.}\PYG{n}{targets}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Cam undefined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{plotted} \PYG{o}{=} \PYG{p}{[]}
+                \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{args}\PYG{o}{.}\PYG{n}{targets}\PYG{p}{:}
+                    \PYG{n}{plotted}\PYG{o}{.}\PYG{n}{extend}\PYG{p}{(}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{pcoords}\PYG{p}{[:])}
+                \PYG{k}{if} \PYG{l+s+s1}{\PYGZsq{}conj\PYGZsq{}} \PYG{o+ow}{in} \PYG{n}{args}\PYG{o}{.}\PYG{n}{targets}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{conj}\PYG{p}{():}
+                        \PYG{c+c1}{\PYGZsh{} Maybe should call generation instead}
+                        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Conjugated cam undefined\PYGZsq{}}\PYG{p}{)}
+                        \PYG{k}{continue}
+                    \PYG{n}{plotted}\PYG{o}{.}\PYG{n}{extend}\PYG{p}{(}\PYG{n}{cam}\PYG{o}{.}\PYG{n}{conj\PYGZus{}pcoords}\PYG{p}{[:])}
+                \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{unroll}\PYG{p}{:}
+                    \PYG{n}{ax} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{subplot}\PYG{p}{()}
+                    \PYG{n}{ax}\PYG{o}{.}\PYG{n}{margins}\PYG{p}{(}\PYG{l+m+mf}{0.1}\PYG{p}{)}
+                    \PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{o}{*}\PYG{n}{plotted}\PYG{p}{)}
+                \PYG{k}{else}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{cartesian}\PYG{p}{:}
+                        \PYG{n}{ax} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{subplot}\PYG{p}{()}
+                        \PYG{n}{ax}\PYG{o}{.}\PYG{n}{axis}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}equal\PYGZsq{}}\PYG{p}{)}
+                        \PYG{n}{ax}\PYG{o}{.}\PYG{n}{margins}\PYG{p}{(}\PYG{l+m+mf}{0.1}\PYG{p}{)}
+                        \PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{o}{*}\PYG{n}{plot\PYGZus{}polar}\PYG{p}{(}\PYG{o}{*}\PYG{n}{plotted}\PYG{p}{))}
+                    \PYG{k}{else}\PYG{p}{:}
+                        \PYG{n}{ax} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{,} \PYG{n}{polar}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+                        \PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}theta\PYGZus{}zero\PYGZus{}location}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}N\PYGZsq{}}\PYG{p}{)}
+                        \PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{o}{*}\PYG{n}{plotted}\PYG{p}{)}
+                        \PYG{n}{ax}\PYG{o}{.}\PYG{n}{margins}\PYG{p}{(}\PYG{l+m+mf}{0.5}\PYG{p}{)}
+                        \PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylim}\PYG{p}{(}\PYG{n}{ymin}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
+                \PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} UPDATE}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}update\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}travel\PYGZsq{}}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{xpoints}\PYG{p}{:}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Loaded cam, unable to update\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Updating travel\PYGZsq{}}\PYG{p}{)}
+                \PYG{n}{travel}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{x1}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{kind}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{order}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{steps}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{n}\PYG{p}{)}
+
+                \PYG{c+c1}{\PYGZsh{} If cam is generated (not loaded) repeat interpolation}
+                \PYG{k}{if} \PYG{n}{cam}\PYG{p}{()} \PYG{o+ow}{and} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{loaded}\PYG{p}{:}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Updating cam\PYGZsq{}}\PYG{p}{)}
+                    \PYG{n}{cam}\PYG{o}{.}\PYG{n}{gen}\PYG{p}{()}
+            \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}cam\PYGZsq{}}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Cam not defined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{k}{elif} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{loaded}\PYG{p}{:}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Loaded cam, unable to update\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{follower}\PYG{o}{.}\PYG{n}{update}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{flat}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{offset}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{fradius}\PYG{p}{)}
+                \PYG{n}{cam}\PYG{o}{.}\PYG{n}{gen}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{radius}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{ccw}\PYG{p}{)}
+            \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{target} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}conj\PYGZsq{}}\PYG{p}{:}
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{o}{.}\PYG{n}{conj}\PYG{p}{():}
+                    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Conjugated cam not defined\PYGZsq{}}\PYG{p}{)}
+                    \PYG{k}{continue}
+                \PYG{n}{cam}\PYG{o}{.}\PYG{n}{gen\PYGZus{}conjugated}\PYG{p}{(}\PYG{n}{args}\PYG{o}{.}\PYG{n}{breadth}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} SIMULATION}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}sim\PYGZsq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{cam}\PYG{p}{():}
+                \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Cam not defined\PYGZsq{}}\PYG{p}{)}
+                \PYG{k}{continue}
+            \PYG{k}{if} \PYG{n}{args}\PYG{o}{.}\PYG{n}{rpm} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{n}{args}\PYG{o}{.}\PYG{n}{omega} \PYG{o}{=} \PYG{n}{args}\PYG{o}{.}\PYG{n}{rpm}\PYG{o}{/}\PYG{l+m+mi}{60}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{np}\PYG{o}{.}\PYG{n}{pi}
+            \PYG{n}{simulation}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{cam}\PYG{p}{,} \PYG{n}{follower}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{omega}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{steps}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{precision}\PYG{p}{)}
+        \PYG{c+c1}{\PYGZsh{} EXPORT}
+        \PYG{k}{elif} \PYG{n}{args}\PYG{o}{.}\PYG{n}{command} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}export\PYGZsq{}}\PYG{p}{:}
+            \PYG{n}{export}\PYG{o}{.}\PYG{n}{stl}\PYG{p}{(}\PYG{n}{cam}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{file}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{width}\PYG{p}{,} \PYG{n}{args}\PYG{o}{.}\PYG{n}{conj}\PYG{p}{)}
+    \PYG{k}{except} \PYG{p}{(}\PYG{n}{ArgumentError}\PYG{p}{,} \PYG{n}{argparse}\PYG{o}{.}\PYG{n}{ArgumentError}\PYG{p}{,} \PYG{n}{argparse}\PYG{o}{.}\PYG{n}{ArgumentTypeError}\PYG{p}{)} \PYG{k}{as} \PYG{n}{ex}\PYG{p}{:}
+        \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{ex}\PYG{o}{.}\PYG{n}{args}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{ArgumentParser}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n}{ex}\PYG{o}{.}\PYG{n}{args}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n+nb+bp}{None}\PYG{p}{:}
+                \PYG{k}{print}\PYG{p}{(}\PYG{n}{ex}\PYG{o}{.}\PYG{n}{args}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])}
+                \PYG{n}{ex}\PYG{o}{.}\PYG{n}{args}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{.}\PYG{n}{print\PYGZus{}usage}\PYG{p}{()}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{k}{print}\PYG{p}{(}\PYG{n}{ex}\PYG{p}{)}
+    \PYG{k}{except} \PYG{n}{FileNotFoundError}\PYG{p}{:}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}File not found\PYGZsq{}}\PYG{p}{)}
+    \PYG{k}{except} \PYG{n}{HandledValueError} \PYG{k}{as} \PYG{n}{ex}\PYG{p}{:}
+        \PYG{k}{print}\PYG{p}{(}\PYG{n}{ex}\PYG{p}{)}
+\end{Verbatim}

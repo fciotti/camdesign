@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{n}{follower}\PYG{o}{.}\PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}knife\PYGZsq{}}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{follower}\PYG{o}{.}\PYG{n}{offset} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+        \PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n}{radius}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{follower}\PYG{o}{.}\PYG{n}{offset}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{o}{+}\PYG{p}{(}\PYG{n}{radius}\PYG{o}{+}\PYG{n}{travel}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+\PYG{k}{elif} \PYG{n}{follower}\PYG{o}{.}\PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}roller\PYGZsq{}}\PYG{p}{:}
+    \PYG{k}{if} \PYG{n}{follower}\PYG{o}{.}\PYG{n}{offset} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+        \PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n}{radius} \PYG{o}{\PYGZhy{}} \PYG{n}{follower}\PYG{o}{.}\PYG{n}{radius}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{n}{rho\PYGZus{}trace} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{follower}\PYG{o}{.}\PYG{n}{offset} \PYG{o}{**} \PYG{l+m+mi}{2} \PYG{o}{+} \PYG{p}{(}\PYG{n}{radius} \PYG{o}{+} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{y}\PYG{p}{)} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{)}
+        \PYG{n}{pcoords} \PYG{o}{=} \PYG{n}{envelope}\PYG{o}{.}\PYG{n}{roller}\PYG{p}{(}\PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{rho\PYGZus{}trace}\PYG{p}{,} \PYG{n}{follower}\PYG{o}{.}\PYG{n}{radius}\PYG{p}{)}
+\PYG{k}{elif} \PYG{n}{follower}\PYG{o}{.}\PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}flat\PYGZsq{}}\PYG{p}{:}
+    \PYG{n}{pcoords} \PYG{o}{=} \PYG{n}{envelope}\PYG{o}{.}\PYG{n}{flat}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([}\PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{travel}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n}{radius}\PYG{p}{]))}
+\PYG{k}{if} \PYG{n}{ccw}\PYG{p}{:}
+    \PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{pcoords}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][::}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\end{Verbatim}

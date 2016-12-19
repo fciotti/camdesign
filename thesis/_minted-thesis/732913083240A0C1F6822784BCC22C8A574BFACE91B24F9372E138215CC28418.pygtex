@@ -1,0 +1,106 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{from} \PYG{n+nn}{scipy} \PYG{k+kn}{import} \PYG{n}{interpolate}
+\PYG{k+kn}{from} \PYG{n+nn}{utils} \PYG{k+kn}{import} \PYG{n}{HandledValueError}
+
+
+\PYG{k}{def} \PYG{n+nf}{spline}\PYG{p}{(}\PYG{n}{xpoints}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{,} \PYG{n}{order}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{order} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{5} \PYG{o+ow}{or} \PYG{n}{order} \PYG{o}{\PYGZgt{}=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{xpoints}\PYG{p}{):}
+        \PYG{k}{raise} \PYG{n}{HandledValueError}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}Spline order must be smaller than number of points and not greater than 5\PYGZsq{}}\PYG{p}{)}
+    \PYG{n}{tck} \PYG{o}{=} \PYG{n}{interpolate}\PYG{o}{.}\PYG{n}{splrep}\PYG{p}{(}\PYG{n}{xpoints}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{,} \PYG{n}{k}\PYG{o}{=}\PYG{n}{order}\PYG{p}{,} \PYG{n}{per}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+    \PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{interpolate}\PYG{o}{.}\PYG{n}{splev}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{tck}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}
+
+
+\PYG{k}{def} \PYG{n+nf}{linear}\PYG{p}{(}\PYG{n}{xpoints}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{):}
+    \PYG{n}{f} \PYG{o}{=} \PYG{n}{interpolate}\PYG{o}{.}\PYG{n}{interp1d}\PYG{p}{([}\PYG{n}{xpoints}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{xpoints}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{+} \PYG{n}{xpoints}\PYG{p}{,} \PYG{p}{[}\PYG{n}{ypoints}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{],} \PYG{n}{ypoints}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o}{+} \PYG{n}{ypoints}\PYG{p}{)}
+    \PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{f}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}
+
+
+\PYG{k}{def} \PYG{n+nf}{points}\PYG{p}{(}\PYG{n}{kind}\PYG{p}{,} \PYG{n}{xpoints}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{,} \PYG{n}{order}\PYG{o}{=}\PYG{n+nb+bp}{None}\PYG{p}{):}
+    \PYG{n}{x}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{p}{[],} \PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{xpoints}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{):}
+        \PYG{n}{x0} \PYG{o}{=} \PYG{n}{xpoints}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+        \PYG{n}{y0} \PYG{o}{=} \PYG{n}{ypoints}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+        \PYG{k}{if} \PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}polynomial\PYGZsq{}}\PYG{p}{:}
+            \PYG{n}{xs}\PYG{p}{,} \PYG{n}{ys} \PYG{o}{=} \PYG{n}{func}\PYG{p}{(}\PYG{n}{kind}\PYG{p}{,} \PYG{n}{x0}\PYG{p}{,} \PYG{n}{xpoints}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{y0}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{steps}\PYG{p}{,} \PYG{n}{order}\PYG{p}{)}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{n}{xs}\PYG{p}{,} \PYG{n}{ys} \PYG{o}{=} \PYG{n}{func}\PYG{p}{(}\PYG{n}{kind}\PYG{p}{,} \PYG{n}{x0}\PYG{p}{,} \PYG{n}{xpoints}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{y0}\PYG{p}{,} \PYG{n}{ypoints}\PYG{p}{[}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{steps}\PYG{p}{)}
+        \PYG{n}{x}\PYG{o}{.}\PYG{n}{extend}\PYG{p}{(}\PYG{n}{xs}\PYG{p}{)}
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{extend}\PYG{p}{(}\PYG{n}{ys}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}
+
+
+\PYG{k}{def} \PYG{n+nf}{func}\PYG{p}{(}\PYG{n}{kind}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}harmonic\PYGZsq{}}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{harmonic}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+    \PYG{k}{elif} \PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}cycloidal\PYGZsq{}}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{cycloidal}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+    \PYG{k}{elif} \PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}parabolic\PYGZsq{}}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{parabolic}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+    \PYG{k}{elif} \PYG{n}{kind} \PYG{o}{==} \PYG{l+s+s1}{\PYGZsq{}polynomial\PYGZsq{}}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{polynomial}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+    \PYG{k}{else}\PYG{p}{:}
+        \PYG{k}{raise} \PYG{n}{HandledValueError}
+
+
+\PYG{k}{def} \PYG{n+nf}{harmonic}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{y0}\PYG{p}{,} \PYG{n}{y1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{):}
+    \PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{y0} \PYG{o}{+} \PYG{p}{(}\PYG{n}{y1}\PYG{o}{\PYGZhy{}}\PYG{n}{y0}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{divide}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{pi}\PYG{o}{*}\PYG{p}{(}\PYG{n}{x}\PYG{o}{+}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{)),} \PYG{n}{x1}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{)))}
+    \PYG{k}{return} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}
+
+
+\PYG{k}{def} \PYG{n+nf}{cycloidal}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{y0}\PYG{p}{,} \PYG{n}{y1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{):}
+    \PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+    \PYG{n}{r} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{divide}\PYG{p}{(}\PYG{n}{x}\PYG{o}{+}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{),} \PYG{n}{x1}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{)}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{y0} \PYG{o}{+} \PYG{p}{(}\PYG{n}{y1}\PYG{o}{\PYGZhy{}}\PYG{n}{y0}\PYG{p}{)}\PYG{o}{/}\PYG{n}{np}\PYG{o}{.}\PYG{n}{pi}\PYG{o}{*}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{pi}\PYG{o}{*}\PYG{n}{r}\PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{sin}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{np}\PYG{o}{.}\PYG{n}{pi}\PYG{o}{*}\PYG{n}{r}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}
+
+
+\PYG{k}{def} \PYG{n+nf}{parabolic}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{y0}\PYG{p}{,} \PYG{n}{y1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{):}
+    \PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{p}{(}\PYG{n}{x0}\PYG{o}{+}\PYG{n}{x1}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+    \PYG{n}{r} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{divide}\PYG{p}{(}\PYG{n}{x} \PYG{o}{+} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{),} \PYG{n}{x1} \PYG{o}{\PYGZhy{}} \PYG{n}{x0}\PYG{p}{)}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{y0} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{p}{(}\PYG{n}{y1}\PYG{o}{\PYGZhy{}}\PYG{n}{y0}\PYG{p}{)}\PYG{o}{*}\PYG{n}{r}\PYG{o}{**}\PYG{l+m+mi}{2}
+    \PYG{n}{x2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{((}\PYG{n}{x0}\PYG{o}{+}\PYG{n}{x1}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+    \PYG{n}{r2} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{divide}\PYG{p}{(}\PYG{n}{x2} \PYG{o}{+} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{),} \PYG{n}{x1} \PYG{o}{\PYGZhy{}} \PYG{n}{x0}\PYG{p}{)}
+    \PYG{n}{y2} \PYG{o}{=} \PYG{n}{y0} \PYG{o}{+} \PYG{p}{(}\PYG{n}{y1}\PYG{o}{\PYGZhy{}}\PYG{n}{y0}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZhy{}}\PYG{n}{r2}\PYG{p}{)}\PYG{o}{**}\PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{x}\PYG{p}{,} \PYG{n}{x2}\PYG{p}{)),} \PYG{n}{np}\PYG{o}{.}\PYG{n}{concatenate}\PYG{p}{((}\PYG{n}{y}\PYG{p}{,} \PYG{n}{y2}\PYG{p}{))}
+
+
+\PYG{k}{def} \PYG{n+nf}{polynomial}\PYG{p}{(}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{x1}\PYG{p}{,} \PYG{n}{y0}\PYG{p}{,} \PYG{n}{y1}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{,} \PYG{n}{order}\PYG{p}{):}
+    \PYG{c+c1}{\PYGZsh{} Vandermonde matrix}
+    \PYG{n}{A} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{l+m+mi}{2}\PYG{o}{+}\PYG{n}{order}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{o}{+}\PYG{n}{order}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{))}
+
+    \PYG{n}{B} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{+}\PYG{n}{order}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+    \PYG{n}{B}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{n}{B}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{y1}\PYG{o}{\PYGZhy{}}\PYG{n}{y0}
+
+    \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{o}{+}\PYG{n}{order}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{):}
+        \PYG{n}{A}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{col}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0} \PYG{o}{**} \PYG{n}{col}
+        \PYG{n}{A}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{col}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{n}{x1}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{)} \PYG{o}{**} \PYG{n}{col}
+
+    \PYG{k}{for} \PYG{n}{deriv} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{order} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{):}
+        \PYG{n}{B}\PYG{p}{[}\PYG{n}{deriv}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{n}{B}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{n}{deriv}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}
+        \PYG{k}{for} \PYG{n}{col} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{o}{+}\PYG{n}{order}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{):}
+            \PYG{n}{A}\PYG{p}{[}\PYG{n}{deriv}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{col}\PYG{p}{]} \PYG{o}{=} \PYG{n}{der}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{col}\PYG{p}{,} \PYG{n}{deriv}\PYG{p}{)}
+            \PYG{n}{A}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{n}{deriv}\PYG{o}{*}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{col}\PYG{p}{]} \PYG{o}{=} \PYG{n}{der}\PYG{p}{((}\PYG{n}{x1}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{),} \PYG{n}{col}\PYG{p}{,} \PYG{n}{deriv}\PYG{p}{)}
+
+    \PYG{n}{c} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linalg}\PYG{o}{.}\PYG{n}{solve}\PYG{p}{(}\PYG{n}{A}\PYG{p}{,} \PYG{n}{B}\PYG{p}{)}
+
+    \PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{x1}\PYG{o}{\PYGZhy{}}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{steps}\PYG{p}{)}
+    \PYG{n}{y} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{polyval}\PYG{p}{(}\PYG{n}{c}\PYG{p}{[::}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{x}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{x}\PYG{o}{+}\PYG{n}{x0}\PYG{p}{,} \PYG{n}{y}\PYG{o}{+}\PYG{n}{y0}
+
+
+\PYG{c+c1}{\PYGZsh{} k\PYGZhy{}th derivative of x\PYGZca{}n}
+\PYG{k}{def} \PYG{n+nf}{der}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{n}\PYG{p}{,} \PYG{n}{k}\PYG{p}{):}
+    \PYG{k}{if} \PYG{n}{k} \PYG{o}{\PYGZgt{}} \PYG{n}{n}\PYG{p}{:}
+        \PYG{k}{return} \PYG{l+m+mi}{0}
+    \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{math}\PYG{o}{.}\PYG{n}{factorial}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)}\PYG{o}{/}\PYG{n}{np}\PYG{o}{.}\PYG{n}{math}\PYG{o}{.}\PYG{n}{factorial}\PYG{p}{(}\PYG{n}{n}\PYG{o}{\PYGZhy{}}\PYG{n}{k}\PYG{p}{)}\PYG{o}{*}\PYG{n}{x}\PYG{o}{**}\PYG{p}{(}\PYG{n}{n}\PYG{o}{\PYGZhy{}}\PYG{n}{k}\PYG{p}{)}
+\end{Verbatim}

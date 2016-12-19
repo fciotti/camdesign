@@ -66,14 +66,13 @@ class Cam:
                 self.pcoords = envelope.roller(self.pcoords[0], self.rho_trace, self.follower.radius)
         elif self.follower.kind == 'flat':
             self.pcoords = envelope.flat(np.array([self.pcoords[0], self.travel.y + self.radius]))
-            # self.pcoords = envelope.flat2(self.pcoords[0], self.travel.y + self.radius, self.pcoords[0]+np.pi/2)
         if self.ccw:
             self.pcoords[1] = self.pcoords[1][::-1]
 
         # Fixing x to [0;2pi], needed only for a few things
         self.pcoords[0] %= 2*np.pi
-        if self.pcoords[0][-1] == 0:
-            self.pcoords[0][-1] = 2*np.pi
+        # if self.pcoords[0][-1] == 0:
+        #     self.pcoords[0][-1] = 2*np.pi
         self.pcoords = self.pcoords[:, self.pcoords[0].argsort()]
 
         # pts = [i for i, p in enumerate(self.pcoords[0]) if p >= 0]
@@ -82,8 +81,16 @@ class Cam:
         #     self.pcoords[0] = self.pcoords[0][first:] + self.pcoords[0][:first + 1]
         #     self.pcoords[1] = self.pcoords[1][first:] + self.pcoords[1][:first + 1]
 
+        if(self.pcoords[0][0]) > 0:
+            # Search last point with theta <= 2*pi and copy it to the start, shifted of -2*pi
+            p = self.pcoords[:, self.pcoords[0] <= 2*np.pi][:, -1]
+            self.pcoords = np.insert(self.pcoords, 0, [p[0] - 2*np.pi, p[1]], 1)
+        if (self.pcoords[0][-1]) < 2*np.pi:
+            # Search first point with theta >= 0 and copy it to the end shifted of 2*pi
+            p = self.pcoords[:, self.pcoords[0] >= 0][:, 0]
+            self.pcoords = np.insert(self.pcoords, -1, [p[0] + 2*np.pi, p[1]], 1)
+
         self.f = interp1d(*self.pcoords)
-        # self.spline = splrep(*self.pcoords, per=True)
 
     def load(self, filename):
         self.pcoords = fileio.read(filename)
@@ -92,26 +99,21 @@ class Cam:
         self.conj_pcoords = None
 
     def gen_conjugated(self, breadth=None):
-        # Only flat follower and others with diametrically opposed followers
+        # For flat follower and others with diametrically opposed followers
         if breadth is None:
             breadth = self.breadth
         if breadth == 0:
-            # Set breadth = max cam diameter
+            # Set breadth = mean cam diameter
             print('Searching optimal breadth')
-            progress = Progress()
-            for i, p in enumerate(self.pcoords.T):
-                b = p[1] + self.interp(p[0]+np.pi)  # self.near_rho(p[0]+np.pi)
-                if b > breadth:
-                    breadth = b
-                progress(i/len(self.pcoords.T))
-            progress.close()
+            diam = self.pcoords[1] + self.interp(self.pcoords[0]+np.pi)
+            breadth = diam.sum() / self.pcoords.shape[1]
         elif breadth < np.max(self.pcoords[1]):
-            # maybe could be, with opposed values must sum > 0
+            # maybe could be, with opposed values sum > 0
             raise HandledValueError('Breadth must be >= max radius ({:.3g})'.format(np.max(self.pcoords[1])))
         self.breadth = breadth
         print('Breadth:', breadth)
         self.conj_pcoords = np.empty_like(self.pcoords)
         for i in range(0, len(self.pcoords.T)):
             self.conj_pcoords[:, i] = (self.pcoords[0, i]+np.pi) % (2*np.pi), breadth - self.pcoords[1][i]
-        # just fast, but probably would be enough a shift
+        # just fast, but probably a shift would be enough
         self.conj_pcoords = self.conj_pcoords[:, self.conj_pcoords[0].argsort()]
