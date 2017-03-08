@@ -64,7 +64,7 @@ class Travel:
 
             x, y = [], []
             if self.interp == 'spline':
-                x, y = interpolation.spline(self.xpoints, self.ypoints, self.order, self.steps)
+                x, y = interpolation.spline(self.xpoints, self.ypoints, self.steps, self.order)
             elif self.interp == 'linear':
                 x, y = interpolation.linear(self.xpoints, self.ypoints, self.steps)
                 # x, y = self.xpoints, self.ypoints  # more sense, some problems with cam

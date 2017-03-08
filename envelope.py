@@ -6,6 +6,7 @@ from utils import cartesian, polar
 # Super fast
 def flat(pcoords):
     result = np.empty_like(pcoords)
+    result[0] = pcoords[0]
     for i, theta0 in enumerate(pcoords[0]):
         distances = pcoords[1] / np.cos(pcoords[0] - theta0)
         result[1][i] = np.min(distances[distances > 0])

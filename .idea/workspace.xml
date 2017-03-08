@@ -2,37 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="67426ad8-4440-44ba-a108-e771c0d3e280" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/test7.txt" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/args.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/draw.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/generation.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/poly.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/Synthesis of function generators cam-follower systems for rapid prototyping.ipynb" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/Synthesis of function generators cam-follower systems for rapid prototyping.pdf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/Synthesis of function generators cam-follower systems for rapid prototyping.tex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/template.tplx" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/cam1.txt" afterPath="$PROJECT_DIR$/tests/cam1.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/output.txt" afterPath="$PROJECT_DIR$/tests/output.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test1.stl" afterPath="$PROJECT_DIR$/tests/test1.stl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test1.txt" afterPath="$PROJECT_DIR$/tests/test1.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test11.stl" afterPath="$PROJECT_DIR$/tests/test11.stl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test12.stl" afterPath="$PROJECT_DIR$/tests/test12.stl" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test2.txt" afterPath="$PROJECT_DIR$/tests/test2.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test3.txt" afterPath="$PROJECT_DIR$/tests/test3.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test4.txt" afterPath="$PROJECT_DIR$/tests/test4.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test5.txt" afterPath="$PROJECT_DIR$/tests/test5.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test6.txt" afterPath="$PROJECT_DIR$/tests/test6.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/travel1.csv" afterPath="$PROJECT_DIR$/tests/travel1.csv" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/travel1.txt" afterPath="$PROJECT_DIR$/tests/travel1.txt" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/0C00ECF3044CBDF84F69AA6BCA2B81370102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/2B991354AA4AA982A81A677685776960189C57BDD4FF1DF3886EFA87413CC3B7.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/2F8CA964EDF551AB822AD7349E6DAD58B9942825E20CF324A0A5479D79DFAABB.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/300593B820ECC9583E8D4E594DD23D340102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/448BC954DB2074A40EE5731CE9D502F10102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/732913083240A0C1F6822784BCC22C8A574BFACE91B24F9372E138215CC28418.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/8EAA20925F7379631BBB8A8E9283E40FE290843D6C9C23306B2254F785AD890D.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/9DF226852154D26897724295E5CE310D1525F71A1A44DFDA719202B37ABEBF7B.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/B5C3692D9280CB47E5C2E7B25C6882A90E702B639EA674517C14FFF13AA57620.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/C4EB52191677125829465FF688AF6A987E2055604890CEB4DCDF910C9A129DD0.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/CDA364B32DFFEAC6A2072661AD0535CD0102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/D0A523FCFBA75D08DDF116415493382E0BA5ED98F973B40A9BFBD5490E5A0F11.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/E0F100BE8F359CB95471F9599EA40BCCEAB950918351050EDE64F9E7B9D6AB1E.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/F574B68EC7DF31ED62291C181E2C189609762D4A8866DA309D7939EBD96B6328.pygtex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/header.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/thesis.pdf" afterPath="$PROJECT_DIR$/thesis/thesis.pdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/camdesign.iml" afterPath="$PROJECT_DIR$/.idea/camdesign.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/backup.txt" afterPath="$PROJECT_DIR$/backup.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cam.py" afterPath="$PROJECT_DIR$/cam.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/envelope.py" afterPath="$PROJECT_DIR$/envelope.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/export.py" afterPath="$PROJECT_DIR$/export.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/interpolation.py" afterPath="$PROJECT_DIR$/interpolation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation.py" afterPath="$PROJECT_DIR$/simulation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/cam1.txt" afterPath="$PROJECT_DIR$/tests/cam1.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/output.txt" afterPath="$PROJECT_DIR$/tests/output.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/default-pyg-prefix.pygstyle" afterPath="$PROJECT_DIR$/thesis/_minted-thesis/default-pyg-prefix.pygstyle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/default.pygstyle" afterPath="$PROJECT_DIR$/thesis/_minted-thesis/default.pygstyle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/thesis.aux" afterPath="$PROJECT_DIR$/thesis/thesis.aux" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/thesis.tex" afterPath="$PROJECT_DIR$/thesis/thesis.tex" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/travel.py" afterPath="$PROJECT_DIR$/travel.py" />
     </list>
@@ -54,38 +49,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="thesis.tex" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/thesis/thesis.tex">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1722">
-              <caret line="82" column="0" lean-forward="true" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
-              <folding>
-                <element signature="e#1516#3027#0" expanded="true" />
-                <element signature="e#1565#2028#0" expanded="true" />
-                <element signature="e#1789#1990#0" expanded="true" />
-                <element signature="e#3275#3729#0" expanded="true" />
-                <element signature="e#3984#4011#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="63">
-              <caret line="4" column="23" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="simulation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-990">
-              <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
-              <folding />
+            <state relative-caret-position="336">
+              <caret line="115" column="53" lean-forward="false" selection-start-line="115" selection-start-column="53" selection-end-line="115" selection-end-column="53" />
+              <folding>
+                <element signature="e#0#36#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -93,8 +64,8 @@
       <file leaf-file-name="export.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/export.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="28" column="26" lean-forward="false" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+            <state relative-caret-position="840">
+              <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -102,11 +73,31 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="fileio.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fileio.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1071">
+              <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="follower.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/follower.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="462">
+              <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="102" column="13" lean-forward="false" selection-start-line="102" selection-start-column="13" selection-end-line="102" selection-end-column="13" />
+            <state relative-caret-position="5271">
+              <caret line="260" column="0" lean-forward="false" selection-start-line="260" selection-start-column="0" selection-end-line="260" selection-end-column="0" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -114,21 +105,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cam.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cam.py">
+      <file leaf-file-name="travel.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/travel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="23" column="32" lean-forward="false" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+            <state relative-caret-position="1260">
+              <caret line="66" column="94" lean-forward="false" selection-start-line="66" selection-start-column="94" selection-end-line="66" selection-end-column="94" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="envelope.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/envelope.py">
+      <file leaf-file-name="cam.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cam.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="23" column="28" lean-forward="false" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
+            <state relative-caret-position="1323">
+              <caret line="67" column="0" lean-forward="false" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -137,9 +128,21 @@
       <file leaf-file-name="interpolation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/interpolation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="15" column="107" lean-forward="false" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="107" />
+            <state relative-caret-position="147">
+              <caret line="9" column="32" lean-forward="false" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="thesis.tex" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/thesis/thesis.tex">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="446" column="60" lean-forward="false" selection-start-line="446" selection-start-column="60" selection-end-line="446" selection-end-column="60" />
+              <folding>
+                <marker date="1488965108714" expanded="false" signature="5465:5492" ph="\begin{verbatim}..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -155,17 +158,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cam.rho.max</find>
-      <find>rho_ma</find>
-      <find>follower</find>
-      <find>follower.</find>
-      <find>transla</find>
-      <find>_defaults</find>
-      <find>self.l</find>
-      <find>mutu</find>
-      <find>set_defa</find>
-      <find>expr</find>
-      <find>print</find>
       <find>def</find>
       <find>default</find>
       <find>kind</find>
@@ -185,6 +177,17 @@
       <find>\inputminted{python}</find>
       <find>\begin{py}</find>
       <find>\end{minted}</find>
+      <find>engl</find>
+      <find>footb</find>
+      <find>size</find>
+      <find>polygonal</find>
+      <find>vander</find>
+      <find>date</find>
+      <find>makea</find>
+      <find>item</find>
+      <find>lamb</find>
+      <find>sympy</find>
+      <find>enumera</find>
     </findStrings>
     <replaceStrings>
       <replace>raise HandledValueError</replace>
@@ -223,13 +226,13 @@
         <option value="$PROJECT_DIR$/test7.txt" />
         <option value="$PROJECT_DIR$/interpolation.py" />
         <option value="$PROJECT_DIR$/thesis/template.tplx" />
-        <option value="$PROJECT_DIR$/travel.py" />
         <option value="$PROJECT_DIR$/backup.txt" />
-        <option value="$PROJECT_DIR$/envelope.py" />
         <option value="$PROJECT_DIR$/cam.py" />
-        <option value="$PROJECT_DIR$/simulation.py" />
         <option value="$PROJECT_DIR$/export.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/envelope.py" />
+        <option value="$PROJECT_DIR$/travel.py" />
+        <option value="$PROJECT_DIR$/simulation.py" />
         <option value="$PROJECT_DIR$/thesis/thesis.tex" />
       </list>
     </option>
@@ -274,6 +277,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -286,13 +290,26 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="camdesign" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="camdesign" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="thesis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="PyConsoleConfigurable.Python Console" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="PyConsoleOptionsProvider">
@@ -535,18 +552,18 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29308453" sideWeight="0.5058017" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3435785" sideWeight="0.49419832" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3677278" sideWeight="0.49525318" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15916575" sideWeight="0.49419832" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32821077" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33809" sideWeight="0.49525318" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -575,18 +592,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="272" />
+      <option name="time" value="278" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="295">
@@ -601,85 +611,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/python3.5/csv.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/lib/python3.5/csv.py" />
     <entry file="file://$USER_HOME$/.PyCharm2016.2/system/python_stubs/-1247971764/builtins.py" />
-    <entry file="file:///usr/lib/python3.5/site-packages/sympy/simplify/simplify.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="1134" column="0" lean-forward="false" selection-start-line="1134" selection-start-column="0" selection-end-line="1134" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/sympify.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="232" column="0" lean-forward="false" selection-start-line="232" selection-start-column="0" selection-end-line="232" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/numbers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="1835" column="0" lean-forward="false" selection-start-line="1835" selection-start-column="0" selection-end-line="1835" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/compatibility.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="376" column="0" lean-forward="false" selection-start-line="376" selection-start-column="0" selection-end-line="376" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/basic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="101" column="0" lean-forward="false" selection-start-line="101" selection-start-column="0" selection-end-line="101" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/sympy/geometry/polygon.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1623">
-          <caret line="188" column="36" lean-forward="false" selection-start-line="188" selection-start-column="36" selection-end-line="188" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/containers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/matplotlib/projections/polar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/lib/python3.5/site-packages/sympy/simplify/simplify.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/sympify.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/numbers.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/compatibility.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/basic.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/sympy/geometry/polygon.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/sympy/core/containers.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/matplotlib/projections/polar.py" />
     <entry file="file://$PROJECT_DIR$/backup.py" />
-    <entry file="file:///usr/lib/python3.5/urllib/parse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="698" column="0" lean-forward="false" selection-start-line="698" selection-start-column="0" selection-end-line="698" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="308" column="0" lean-forward="false" selection-start-line="308" selection-start-column="0" selection-end-line="308" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/lib/python3.5/urllib/parse.py" />
+    <entry file="file:///usr/lib/python3.5/codecs.py" />
     <entry file="file://$PROJECT_DIR$/tests/test1.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
@@ -687,13 +631,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/matplotlib/figure.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="1164" column="0" lean-forward="false" selection-start-line="1164" selection-start-column="0" selection-end-line="1164" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/lib/python3.5/site-packages/matplotlib/figure.py" />
     <entry file="file://$PROJECT_DIR$/tests/test5.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
@@ -715,27 +653,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/scipy/optimize/optimize.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="1676" column="0" lean-forward="false" selection-start-line="1676" selection-start-column="0" selection-end-line="1676" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/numpy/core/numerictypes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="1017" column="0" lean-forward="false" selection-start-line="1017" selection-start-column="0" selection-end-line="1017" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/scipy/interpolate/interpolate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="616" column="0" lean-forward="false" selection-start-line="616" selection-start-column="0" selection-end-line="616" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/lib/python3.5/site-packages/scipy/optimize/optimize.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/numpy/core/numerictypes.py" />
+    <entry file="file:///usr/lib/python3.5/site-packages/scipy/interpolate/interpolate.py" />
     <entry file="file:///usr/lib/python3.5/site-packages/stl/base.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
@@ -743,13 +663,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/matplotlib/animation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="944" column="0" lean-forward="false" selection-start-line="944" selection-start-column="0" selection-end-line="944" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///usr/lib/python3.5/site-packages/matplotlib/animation.py" />
     <entry file="file://$PROJECT_DIR$/tests/test2.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
@@ -769,21 +683,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/follower.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="18" column="28" lean-forward="false" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/thesis/template.tplx" />
-    <entry file="file://$PROJECT_DIR$/travel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="921">
-          <caret line="55" column="29" lean-forward="true" selection-start-line="55" selection-start-column="29" selection-end-line="55" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backup.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
@@ -810,101 +710,104 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/interpolation.py">
+    <entry file="file:///usr/lib/python3.5/site-packages/numpy/lib/function_base.py" />
+    <entry file="file:///usr/lib/python3.5/argparse.py" />
+    <entry file="file://$PROJECT_DIR$/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="15" column="107" lean-forward="false" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="107" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python3.5/site-packages/numpy/lib/function_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="4585" column="0" lean-forward="false" selection-start-line="4585" selection-start-column="0" selection-end-line="4585" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cam.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="23" column="32" lean-forward="false" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/envelope.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="23" column="28" lean-forward="false" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
-          <folding />
+        <state relative-caret-position="315">
+          <caret line="16" column="46" lean-forward="false" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/export.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="28" column="26" lean-forward="false" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+        <state relative-caret-position="840">
+          <caret line="45" column="0" lean-forward="false" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/python3.5/argparse.py">
+    <entry file="file://$PROJECT_DIR$/fileio.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="1505" column="0" lean-forward="false" selection-start-line="1505" selection-start-column="0" selection-end-line="1505" selection-end-column="0" />
+        <state relative-caret-position="1071">
+          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simulation.py">
+    <entry file="file://$PROJECT_DIR$/follower.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-990">
-          <caret line="48" column="31" lean-forward="false" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
+        <state relative-caret-position="462">
+          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/envelope.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="21" column="18" lean-forward="true" selection-start-line="21" selection-start-column="18" selection-end-line="21" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cam.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1323">
+          <caret line="67" column="0" lean-forward="false" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/interpolation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="9" column="32" lean-forward="false" selection-start-line="9" selection-start-column="32" selection-end-line="9" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/travel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1260">
+          <caret line="66" column="94" lean-forward="false" selection-start-line="66" selection-start-column="94" selection-end-line="66" selection-end-column="94" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/thesis/thesis.bib" />
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="102" column="13" lean-forward="false" selection-start-line="102" selection-start-column="13" selection-end-line="102" selection-end-column="13" />
+        <state relative-caret-position="5271">
+          <caret line="260" column="0" lean-forward="false" selection-start-line="260" selection-start-column="0" selection-end-line="260" selection-end-column="0" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fileio.py">
+    <entry file="file://$PROJECT_DIR$/simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1008">
-          <caret line="49" column="37" lean-forward="true" selection-start-line="49" selection-start-column="37" selection-end-line="49" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="4" column="23" lean-forward="false" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
-          <folding />
+        <state relative-caret-position="336">
+          <caret line="115" column="53" lean-forward="false" selection-start-line="115" selection-start-column="53" selection-end-line="115" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/thesis/thesis.tex">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1722">
-          <caret line="82" column="0" lean-forward="true" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+        <state relative-caret-position="272">
+          <caret line="446" column="60" lean-forward="false" selection-start-line="446" selection-start-column="60" selection-end-line="446" selection-end-column="60" />
           <folding>
-            <element signature="e#1516#3027#0" expanded="true" />
-            <element signature="e#1565#2028#0" expanded="true" />
-            <element signature="e#1789#1990#0" expanded="true" />
-            <element signature="e#3275#3729#0" expanded="true" />
-            <element signature="e#3984#4011#0" expanded="true" />
+            <marker date="1488965108714" expanded="false" signature="5465:5492" ph="\begin{verbatim}..." />
           </folding>
         </state>
+      </provider>
+      <provider editor-type-id="LaTeXFileEditor">
+        <state />
       </provider>
     </entry>
   </component>

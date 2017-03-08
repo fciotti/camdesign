@@ -1,9 +1,20 @@
 from matplotlib import pyplot as plt
+import matplotlib.gridspec as gridspec
 from utils import *
 from matplotlib.patches import Circle, Wedge
 import numpy as np
 from shapely.geometry import LinearRing, LineString
 import matplotlib.animation as animation
+
+
+def align_yaxis(ax1, v1, ax2, v2):
+    """adjust ax2 ylimit so that v2 in ax2 is aligned to v1 in ax1"""
+    _, y1 = ax1.transData.transform((0, v1))
+    _, y2 = ax2.transData.transform((0, v2))
+    inv = ax2.transData.inverted()
+    _, dy = inv.transform((0, 0)) - inv.transform((0, y1-y2))
+    miny, maxy = ax2.get_ylim()
+    ax2.set_ylim(miny+dy, maxy+dy)
 
 
 def update(n, cam_plot, foll_plot, cam_coords, foll_heights, kind, steps, frames):
@@ -101,26 +112,61 @@ def draw(cam, follower, omega, steps, precision):
         progress(theta0 / 2 / np.pi)
     progress.close()
 
+    velocity = np.gradient(foll_heights, edge_order=2)
+    acceleration = np.gradient(velocity, edge_order=2)
+
     # Initialize graphics
-    fig, ax = plt.subplots(1, 2, sharey=True)
-    ax[0].axis('equal')
-    # max_x = max(max_coord, follower.offset % 1 + follower.radius)
-    # ax[0].set_xlim(-max_coord, max_x)
-    ax[0].set_ylim(-rho_max, np.max(foll_heights)+(follower.radius if follower.kind != 'flat' else 0))
-    ax[0].margins(1)
-    cam_plot, = ax[0].plot(*cam.coords)
+    fig, ax = plt.subplots() # 1, 2, sharey=True)
+    g = gridspec.GridSpec(2, 2)
+    ax0 = plt.subplot(g[:, 0])
+    ax0.axis('equal')
+    # max_coord
+    # max_x = max(max_coord, follower.offset + follower.radius)
+    # ax0.set_xlim(-max_coord, max_x)
+    ax0.set_ylim(-rho_max, np.max(foll_heights)+(follower.radius if follower.kind != 'flat' else 0))
+    # ax0.margins(1)
+    cam_plot, = ax0.plot(*cam.coords)
     if follower.kind == 'flat':
         # foll_plot = Rectangle((0, height), rho_max*2, 0)
-        foll_plot = plt.Line2D((-rho_max, rho_max), (height, height), lw=rho_max/10)
-        ax[0].add_line(foll_plot)
+        foll_plot = plt.Line2D((-rho_max, rho_max), (height, height), lw=1)
+        ax0.add_line(foll_plot)
     elif follower.kind == 'knife':
         foll_plot = Wedge((follower.offset, foll_heights[0]), rho_max, 89, 91)
-        ax[0].add_patch(foll_plot)
+        ax0.add_patch(foll_plot)
     else:
         foll_plot = Circle((follower.offset, foll_heights[0]), follower.radius, fill=False)
-        ax[0].add_patch(foll_plot)
-    ax[0].plot()
-    ax[1].plot(np.linspace(0, 2*np.pi, steps), foll_heights)
+        ax0.add_patch(foll_plot)
+    ax0.plot()
+    ax1 = plt.subplot(g[0, 1])
+    ax1.plot(np.linspace(0, 2 * np.pi, steps), foll_heights)
+    ax1.set_xlim(0, 2 * np.pi)
+    ax2 = plt.subplot(g[1, 1])
+    ax2.plot(np.linspace(0, 2 * np.pi, steps), velocity, 'b')
+    ax2.set_ylabel('velocity', color='b')
+    ax2.tick_params('y', colors='b')
+    ax2.grid(True)
+    ax2t = ax2.twinx()
+    ax2t.plot(np.linspace(0, 2 * np.pi, steps), acceleration, 'r')
+    ax2t.set_ylabel('acceleration', color='r')
+    ax2t.tick_params('y', colors='r')
+    ax2.set_xlim(0, 2 * np.pi)
+
+    ax2my = max(-ax2.get_ylim()[0], ax2.get_ylim()[1])
+    ax2.set_ylim(-ax2my, ax2my)
+    ax2tmy = max(-ax2t.get_ylim()[0], ax2t.get_ylim()[1])
+    ax2t.set_ylim(-ax2tmy, ax2tmy)
+    #ax2.spines['bottom'].set_position('center')
+    #ax2.spines['top'].set_color('none')
+    #ax2t.spines['bottom'].set_position('center')
+    #ax2t.spines['top'].set_color('none')
+    #ax2.xaxis.set_ticks_position('bottom')
+    #ax2.yaxis.set_ticks_position('left')
+    #inv = ax2t.transData.inverted()
+    # _, dy = inv.transform((0, 0)) - inv.transform((0, ax2.transData.transform((0, 0)) - ax2t.transData.transform((0, 0))))
+    # d = inv - inv.transform((0, ax2.transData[1] - ax2t.transData[1]))
+    #miny, maxy = ax2t.get_ylim()
+    #ax2.set_ylim(miny + d[1], maxy + d[1])
+
     t = 2*np.pi/omega
     fps = 100
     frames = round(fps*t)
