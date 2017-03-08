@@ -1,44 +1,46 @@
 \documentclass[a4paper,10pt,twoside]{article}
 
-\title{Software for synthesis of function generators cam-follower systems for rapid prototyping}
-\author{Federico Ciotti}
-\date{December 2016}
-
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
+\usepackage[ddmmyyyy]{datetime}
+\usepackage{emptypage} % no header and footer on blank pages
+
+\title{Software for synthesis of function generators cam-follower systems for rapid prototyping}
+\author{Federico Ciotti}
+\date{\today}
+
 \usepackage{helvet}
 \renewcommand{\familydefault}{\sfdefault}
-%\renewcommand{\normalsize}{\fontsize{10}{13}\selectfont}
-% \setlength{\baselineskip}{1.3em}
-%\renewcommand{\baselinestretch}{1.1}
+\usepackage{enumitem}
+\setlist{nosep}
+\usepackage{hyperref}
+\urlstyle{same}
+\linespread{1.05}
 \usepackage{graphicx}
 \usepackage{color}
 \definecolor{sapienza}{RGB}{130,36,51}
 \usepackage{sectsty}
 \usepackage[compact]{titlesec}
-%\titlespacing*{\section}{0pt}{0.5\baselineskip}{0pt}
+\titlespacing*{\section}{0pt}{1.1\baselineskip}{\parskip}
 \allsectionsfont{\bfseries\normalsize}
-\usepackage{geometry}
-\usepackage{listings}
+\usepackage[includeheadfoot,top=2.5cm,bottom=1.25cm,left=4.5cm,right=3.5cm]{geometry}
 \usepackage{minted}
-
-%\let\oldvrb\verbatim
-%\renewenvironment{verbatim}{\begin{small}\begin{oldvrb}}{\end{oldvrb}\end{small}}
-
-%\let\oldminted\minted
-%\renewenvironment{minted}{\begin{oldminted}{python}}{\end{oldminted}}
-
-%\newenvironment{python}{\begin{pycode}}{\end{pycode}}
-
 \usepackage{fancyhdr}
-\setlength{\headheight}{3.65cm}
+\setlength{\headheight}{2.2cm}
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{\resizebox{6cm}{!}{\includegraphics{header}}}
-\cfoot{\thepage}
+\fancyhead[RE,LO]{\raisebox{-0.1\height}{\resizebox{!}{1.2cm}{\includegraphics{logo}}}}
+\fancyhead[RO,LE]{\thepage}
+\cfoot{\footnotesize\textcolor{sapienza}{Università degli Studi di Roma “La Sapienza”   - Elaborato finale per il conseguimento della Laurea in\\
+    Ingegneria meccanica (sede di Roma) - \url{http://www.ingmecc.uniroma1.it/}}}
 \renewcommand{\headrulewidth}{0pt}
-\fancypagestyle{first}{\cfoot{}}
+\fancypagestyle{first}{
+    \lhead{\raisebox{-0.5\height}{\resizebox{!}{2.2cm}{\includegraphics{header}}}}
+    \rhead{\textcolor{sapienza}{\small\textbf{Elaborato finale per il conseguimento della Laurea\\
+        in Ingegneria meccanica (sede di Roma)\\
+        Finito di elaborare il \today}}}
+    \cfoot{}}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.4em}
@@ -46,28 +48,30 @@
 \newminted[pycode]{python}{autogobble}
 \newmintedfile[py]{python}{fontsize=\footnotesize}
 
+\let\oldverbatim\verbatim
+\renewenvironment{verbatim}{\begin{minipage}{\linewidth}\begin{oldverbatim}}{\end{oldverbatim}\end{minipage}}
+
 \begin{document}
-\lstset{language=Python}
-\newgeometry{includeheadfoot,top=1.25cm,bottom=1.25cm,left=4.5cm,right=3.5cm}
-\makeatletter
 \begin{titlepage}
     \thispagestyle{first}
 
+    \vspace*{2cm}
+    \large
     \begin{center}
-        \large{\textcolor{sapienza}{Elaborato finale per il conseguimento\\della Laurea in Ingegneria meccanica}}\par
-        \vspace{1.2cm}
+%        \large{\textcolor{sapienza}{Elaborato finale per il conseguimento\\della Laurea in Ingegneria meccanica}}\par
+        \makeatletter
         {\Large\textbf{\@title}}\par
-        \vspace{0.6cm}
-        \begin{itshape}
-        \large{Candidato: \@author
-        \\Matricola: 1593763}\par
-        \vspace{1cm}
-        Relatore: prof. Nicola Pio Belfiore
-        \\SSD: ING-IND/13\par
-        \end{itshape}
-        \vspace{1cm}
+        \vspace{\baselineskip}
+        \textit{\@author}\par
+        \makeatother
+        %\\Matricola: 1593763}\par
     \end{center}
-
+    \normalsize
+    \vspace{1.5cm}
+    \textit{Relatore: prof. Nicola Pio Belfiore}\par
+    \vspace{0.2cm}
+    \textit{Disciplina: Meccanica applicata alle macchine ING-IND/13}\par
+    \vspace{1cm}
     \textbf{Abstract.} The aim of this project is the development of an open source software for the design of cam-follower
     mechanisms assigned the function of the follower travel or a set of heights to be linked with a given interpolation method.
     The software is addressed to research and rapid prototyping, thus is provided the option of exporting the result as
@@ -79,31 +83,43 @@
     è prevista la possibilità di esportare il risultato sotto forma di collezione di punti in formato CSV o direttamente
     come modello tridimensionale in formato STL.
 \end{titlepage}
-\makeatother
 
-\newgeometry{includeheadfoot,tmargin=1.25cm,bmargin=1.25cm,lmargin=3cm,rmargin=2cm}
-
+\newgeometry{includeheadfoot,tmargin=1.25cm,bmargin=1.25cm,lmargin=3.5cm,rmargin=2.5cm}
+\fancyhfoffset[E,O]{0pt}
+\cleardoublepage
 \section{Introduction}
-    The program interface is an interactive console written in \emph{Python 3} and it makes use of different libraries:
+    The need for a specialized software to design cam-follower systems and the lack of one in the open source world
+    are the reasons of this work. Complex follower travels are requested in different situations, and a program which
+    could take a generic path or function and generate a cam, and evenutally its conjugated, with diverse follower kinds
+    seemed useful. Furthermore, in the development many problems found a solution so thw source code may be helpful to those facing them.
+    Main limitation is the implicit rigidity, whose negation requires a different and more complicated approach.
+    The following sections illustrate key points of the source code, which is made available
+    on \href{https://github.com/fciotti/camdesign}{GitHub} under GPLv3 license.
 
-    \begin{itemize}\itemsep0em
+    \includegraphics[width=\textwidth]{render.png}
+
+\section{Method}
+    The program is written in \emph{Python 3} and it makes use of different libraries:
+
+    \begin{itemize}[itemsep=0pt,topsep=0pt]
         \item
-          \emph{numpy} for array processing
+          \emph{numpy}, 1.11.2, for array processing
         \item
-          \emph{matplotlib} for plotting
+          \emph{matplotlib}, 1.5.3, for plotting
         \item
-          \emph{shapely} for geometric analysis
+          \emph{shapely}, 1.5.17, for geometric analysis
         \item
-          \emph{scipy} for interpolation
+          \emph{scipy}, 0.18.1, for interpolation
         \item
-          \emph{sympy} for expression parsing
+          \emph{sympy}, 1.0, for expression parsing
         \item
-          \emph{pyclipper} for polygon offsetting
+          \emph{pyclipper}, 1.0.5, for polygon offsetting
         \item
-          \emph{stl} for stl manipulation
+          \emph{numpy-stl}, 2.0.0, for stl files manipulation
     \end{itemize}
 
-\section{Usage}
+\section{Interface}
+    The user interface is an interactive console.
     Command parsing relies on \emph{argparse} module, which takes charge of
     help generation, so every command's documentation may be requested with
     \texttt{-h} or \texttt{-\/-help} option. Avalaible command are listed here:
@@ -195,7 +211,8 @@
     r2 = np.divide(x2 + (-x0), x1 - x0)
     y2 = y0 + (y1-y0)*(1-2*(1-r2)**2)
     
-    # Polynomial, solve Vandermonde matrix with added rows for conditions on derivatives
+    # Polynomial, solve Vandermonde matrix
+    # with added rows for conditions on derivatives
     A = np.zeros((2+order*2, 2+order*2))
     B = np.zeros(2+order*2)
     B[0] = 0
@@ -299,8 +316,10 @@
       -h, --help            show this help message and exit
       --breadth B, -b B     breadth, if 0 calculate optimal (default)
     \end{verbatim}
-The program is able to generate the constant-breadth conjugated cam. The breadth can be set or else it is used
-the mean of cam diameters, an optimal value.
+
+    The program is able to generate the constant-breadth mate cam. The breadth can be set or else it is used
+    the mean of cam diameters, an optimal value.
+
     \begin{pycode}
     def gen_conjugated(self, breadth=None):
         # For flat follower and others with diametrically opposed followers
@@ -327,7 +346,7 @@ the mean of cam diameters, an optimal value.
 
     \includegraphics[width=\textwidth]{conj.png}
 
-\section{STL exportation}\label{stl-exportation}
+\section{STL exportation}
     \begin{verbatim}
     usage:  export [-h] file width
 
@@ -360,7 +379,7 @@ the mean of cam diameters, an optimal value.
 
     The program then concatenates the triangles and proceeds to save the model using methods from the \emph{stl} library.
 
-\section{Simulation}\label{simulation}
+\section{Simulation}
     \begin{verbatim}
     usage:  sim [-h] [--omega W | --rpm RPM] [--steps S] [--precision P]
                 [--gravity G]
@@ -373,7 +392,7 @@ the mean of cam diameters, an optimal value.
       --precision P, -p P  precision (default: 0.001)
       --gravity G, -g G    gravitational acceleration (default: 9.8)
     \end{verbatim}
-
+\clearpage
     The simulation is really basic and is just intended for visualization. The program draws the rotating cam and calculates
     the position of the follower. For flat follower the position is the maximum \emph{y} of the rotated cam
     \mintinline{python}{max(cam_coords[i][1])}.
@@ -428,44 +447,57 @@ the mean of cam diameters, an optimal value.
     Once all follower heights are determined the program calculates velocity and acceleration,
     then renders and displays the animation.
 
-%\section{Utilities}\label{utilities}
+    \includegraphics[width=\textwidth]{sim.png}
+
+\clearpage
+\section{Bibliography}
+    \begin{enumerate}[label={[\arabic*]},labelsep=1cm,leftmargin=*]
+        \item GitHub/fciotti/camdesign, \url{https://github.com/fciotti/camdesign}
+        \item Belfiore N.P., 2011, Fondamenti di Meccanica applicata alle macchine, seconda edizione
+        \item Numpy and Scipy Documentation, \url{https://docs.scipy.org/}
+        \item Sympy 1.0 documentation, \url{http://docs.sympy.org/1.0/index.html}
+        \item The Shapely User Manual, \url{http://toblerity.org/shapely/manual.html}
+        \item GitHub/greginvm/pyclipper, \url{https://github.com/greginvm/pyclipper}
+        \item Angus Johnson's Clipper library, \url{http://www.angusj.com/delphi/clipper.php}
+        \item numpy-stl documentation, \url{https://numpy-stl.readthedocs.io/en/latest/}
+    \end{enumerate}
+
+%\section{Utilities}
 %    \texttt{update} takes the same arguments as \texttt{gen} except for input file/function,
 %    regenerate the target with update parameters (leaving immutated not explicit ones) and
 %
 %    \texttt{save} allows to store generated travel, cam or conjugated cam as CSVs,
 %    for use or future reload with \texttt{load}.
 
-https://github.com/fciotti/camdesign
-
-\section{Source code}
-\texttt{main.py}
-\py{../main.py}
-
-\texttt{fileio.py}
-\py{../main.py}
-
-\texttt{travel.py}
-\py{../travel.py}
-
-\texttt{follower.py}
-\py{../follower.py}
-
-\texttt{interpolation.py}
-\py{../interpolation.py}
-
-\texttt{cam.py}
-\py{../cam.py}
-
-\texttt{envelope.py}
-\py{../envelope.py}
-
-\texttt{export.py}
-\py{../export.py}
-
-\texttt{simulation.py}
-\py{../simulation.py}
-
-\texttt{utils.py}
-\py{../utils.py}
+%\section{Source code}
+%\texttt{main.py}
+%\py{../main.py}
+%
+%\texttt{fileio.py}
+%\py{../main.py}
+%
+%\texttt{travel.py}
+%\py{../travel.py}
+%
+%\texttt{follower.py}
+%\py{../follower.py}
+%
+%\texttt{interpolation.py}
+%\py{../interpolation.py}
+%
+%\texttt{cam.py}
+%\py{../cam.py}
+%
+%\texttt{envelope.py}
+%\py{../envelope.py}
+%
+%\texttt{export.py}
+%\py{../export.py}
+%
+%\texttt{simulation.py}
+%\py{../simulation.py}
+%
+%\texttt{utils.py}
+%\py{../utils.py}
 
 \end{document}
