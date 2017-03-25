@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="67426ad8-4440-44ba-a108-e771c0d3e280" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/0C00ECF3044CBDF84F69AA6BCA2B81370102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/2B991354AA4AA982A81A677685776960189C57BDD4FF1DF3886EFA87413CC3B7.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/2F8CA964EDF551AB822AD7349E6DAD58B9942825E20CF324A0A5479D79DFAABB.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/300593B820ECC9583E8D4E594DD23D340102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/448BC954DB2074A40EE5731CE9D502F10102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/732913083240A0C1F6822784BCC22C8A574BFACE91B24F9372E138215CC28418.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/8EAA20925F7379631BBB8A8E9283E40FE290843D6C9C23306B2254F785AD890D.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/9DF226852154D26897724295E5CE310D1525F71A1A44DFDA719202B37ABEBF7B.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/B5C3692D9280CB47E5C2E7B25C6882A90E702B639EA674517C14FFF13AA57620.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/C4EB52191677125829465FF688AF6A987E2055604890CEB4DCDF910C9A129DD0.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/CDA364B32DFFEAC6A2072661AD0535CD0102E502927AACB428B4F294F23E2359.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/D0A523FCFBA75D08DDF116415493382E0BA5ED98F973B40A9BFBD5490E5A0F11.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/E0F100BE8F359CB95471F9599EA40BCCEAB950918351050EDE64F9E7B9D6AB1E.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/F574B68EC7DF31ED62291C181E2C189609762D4A8866DA309D7939EBD96B6328.pygtex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/thesis/header.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/thesis.pdf" afterPath="$PROJECT_DIR$/thesis/thesis.pdf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/camdesign.iml" afterPath="$PROJECT_DIR$/.idea/camdesign.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/envelope.py" afterPath="$PROJECT_DIR$/envelope.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation.py" afterPath="$PROJECT_DIR$/simulation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/cam1.txt" afterPath="$PROJECT_DIR$/tests/cam1.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/output.txt" afterPath="$PROJECT_DIR$/tests/output.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/default-pyg-prefix.pygstyle" afterPath="$PROJECT_DIR$/thesis/_minted-thesis/default-pyg-prefix.pygstyle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/_minted-thesis/default.pygstyle" afterPath="$PROJECT_DIR$/thesis/_minted-thesis/default.pygstyle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/thesis.aux" afterPath="$PROJECT_DIR$/thesis/thesis.aux" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thesis/thesis.tex" afterPath="$PROJECT_DIR$/thesis/thesis.tex" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/travel.py" afterPath="$PROJECT_DIR$/travel.py" />
-    </list>
+    <list default="true" id="67426ad8-4440-44ba-a108-e771c0d3e280" name="Default" comment="" />
     <ignored path="camdesign.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -138,7 +109,7 @@
       <file leaf-file-name="thesis.tex" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/thesis/thesis.tex">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
+            <state relative-caret-position="146">
               <caret line="446" column="60" lean-forward="false" selection-start-line="446" selection-start-column="60" selection-end-line="446" selection-end-column="60" />
               <folding>
                 <marker date="1488965108714" expanded="false" signature="5465:5492" ph="\begin{verbatim}..." />
@@ -552,7 +523,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29308453" sideWeight="0.5058017" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3435785" sideWeight="0.49419832" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3435785" sideWeight="0.49419832" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32930845" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -799,7 +770,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/thesis/thesis.tex">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
+        <state relative-caret-position="146">
           <caret line="446" column="60" lean-forward="false" selection-start-line="446" selection-start-column="60" selection-end-line="446" selection-end-column="60" />
           <folding>
             <marker date="1488965108714" expanded="false" signature="5465:5492" ph="\begin{verbatim}..." />
